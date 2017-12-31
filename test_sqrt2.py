@@ -36,4 +36,18 @@ print('2.11. Serial Test:\t\t\t\t\t\t\t\t\t\t', Serial.serial_test(binary_data[:
 print('2.12. Approximate Entropy Test:\t\t\t\t\t\t\t', ApproximateEntropy.approximate_entropy_test(binary_data[:1000000]))
 print('2.13. Cumulative Sums (Forward):\t\t\t\t\t\t', CumulativeSums.cumulative_sums_test(binary_data[:1000000], 0))
 print('2.13. Cumulative Sums (Backward):\t\t\t\t\t\t', CumulativeSums.cumulative_sums_test(binary_data[:1000000], 1))
-print('2.14. Random Excursion Test:\t\t\t\t\t\t\t', RandomExcursions.random_excursions_test(binary_data[:1000000], True))
+result = RandomExcursions.random_excursions_test(binary_data[:1000000])
+print('2.14. Random Excursion Test:')
+print('\t\t STATE \t\t\t xObs \t\t\t\t P-Value \t\t\t Conclusion')
+
+for item in result:
+    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[1], '\t\t', repr(item[2]).ljust(14), '\t\t',
+          (item[3] >= 0.01))
+
+result = RandomExcursions.variant_test(binary_data[:1000000])
+
+print('2.15. Random Excursion Variant Test:\t\t\t\t\t\t')
+print('\t\t STATE \t\t COUNTS \t\t\t P-Value \t\t Conclusion')
+for item in result:
+    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[1], '\t\t', repr(item[2]).ljust(14), '\t\t',
+          (item[3] >= 0.01))
