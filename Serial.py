@@ -66,4 +66,4 @@ class Serial:
             print('\tP-Value 02:\t\t\t', p_value_02)
             print('DEBUG END.')
 
-        return (p_value_01, p_value_02, (p_value_01 >= 0.01 and p_value_02 >= 0.01))
+        return ((p_value_01, p_value_01 >= 0.01), (p_value_02, p_value_02 >= 0.01))
