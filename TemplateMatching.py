@@ -9,7 +9,7 @@ from scipy.special import hyp1f1 as hyp1f1
 class TemplateMatching:
 
     @staticmethod
-    def non_overlapping_test(binary_data:str, template_pattern:str, verbose=False, block=8):
+    def non_overlapping_test(binary_data:str, verbose=False, template_pattern='000000001', block=8):
         """
         Note that this description is taken from the NIST documentation [1]
         [1] http://csrc.nist.gov/publications/nistpubs/800-22-rev1a/SP800-22rev1a.pdf
