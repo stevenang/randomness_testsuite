@@ -86,10 +86,11 @@ class RandomExcursions:
                 count += 1
             print('DEBUG END.')
 
+        states = ['-4', '-3', '-2', '-1', '+1', '+2', '+3', '+4',]
         result = []
         count = 0
         for item in p_values:
-            result.append((x_values[count], xObs[count], item, (item >= 0.01)))
+            result.append((states[count], x_values[count], xObs[count], item, (item >= 0.01)))
             count += 1
 
         return result
@@ -113,13 +114,16 @@ class RandomExcursions:
         cumulative_sum = cumsum(sum_int)
 
         li_data = []
+        index = []
         for count in sorted(set(cumulative_sum)):
             if abs(count) <= 9:
+                index.append(count)
                 li_data.append([count, len(where(cumulative_sum == count)[0])])
 
         j = RandomExcursions.get_frequency(li_data, 0) + 1
+
         p_values = []
-        for count in range(-9, 9 + 1):
+        for count in (sorted(set(index))):
             if not count == 0:
                 den = sqrt(2 * j * (4 * abs(count) - 2))
                 p_values.append(erfc(abs(RandomExcursions.get_frequency(li_data, count) - j) / den))
@@ -129,6 +133,7 @@ class RandomExcursions:
         for data in li_data:
             if data[0] == 0:
                 li_data.remove(data)
+                index.remove(0)
                 break
             count += 1
 
@@ -144,10 +149,18 @@ class RandomExcursions:
                 count += 1
             print('DEBUG END.')
 
+
+        states = []
+        for item in index:
+            if item < 0:
+                states.append(str(item))
+            else:
+                states.append('+' + str(item))
+
         result = []
         count = 0
         for item in p_values:
-            result.append((li_data[count][0], li_data[count][1], item, (item >= 0.01)))
+            result.append((states[count], li_data[count][0], li_data[count][1], item, (item >= 0.01)))
             count += 1
 
         return result

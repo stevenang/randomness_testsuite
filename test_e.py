@@ -41,13 +41,13 @@ print('2.14. Random Excursion Test:')
 print('\t\t STATE \t\t\t xObs \t\t\t\t P-Value \t\t\t Conclusion')
 
 for item in result:
-    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[1], '\t\t', repr(item[2]).ljust(14), '\t\t',
-          (item[3] >= 0.01))
+    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[2], '\t\t', repr(item[3]).ljust(14), '\t\t',
+          (item[4] >= 0.01))
 
 result = RandomExcursions.variant_test(binary_data[:1000000])
 
 print('2.15. Random Excursion Variant Test:\t\t\t\t\t\t')
 print('\t\t STATE \t\t COUNTS \t\t\t P-Value \t\t Conclusion')
 for item in result:
-    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[1], '\t\t', repr(item[2]).ljust(14), '\t\t',
-          (item[3] >= 0.01))
+    print('\t\t', repr(item[0]).rjust(4), '\t\t', item[2], '\t\t', repr(item[3]).ljust(14), '\t\t',
+          (item[4] >= 0.01))
