@@ -1,0 +1,27 @@
+1.  You can start the program using your IDE feature (like run) to run Main.py or execute the following command in command prompt:
+    python3 Main.py
+
+2.  Once you saw the interface, you can start using the test suite.
+
+3.  Input Data - Input Data contains Binary Data, Binary Data File and String Data File
+    Binary Data - You can only enter a BINARY STRING here (ex:1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000)
+    Binary Data File - This will open a file dialog where you can select a file to be read by program.
+                       The file you selected should contain only one set of data in BINARY FORM.  (For example, please refer to data/data.e)
+    String Data File - This will open a file dialog where you can select a file to be read by program.
+                       The file you selected can contain multiple set of data in STRING FORM.  (For example, please refer to data/test_data_01.txt)
+
+4.  You can select the type of test you want to perform by clicking the corresponding checkbox or press "Select All Test" to select everything
+5.  You can cancele the selection by clicking the corresponding checkbox or press "De-Select All Test" to cancel everything
+6.  Once you have your data ready and selected the test you want to perform, then you can press "Execute Test" button to execute the test
+7.  The result will be displayed after the test done.
+    7.1  There are multiple result for Random Excursion Test.  Initially the program will displayed state '+1'.  You can chechk the other resuld
+         by changing the state (using drop down) and press "Update" button
+    7.2  There are multiple result for Random Excursion Variant Test.  Initially the program will displayed state '-1.0'.  You can chechk the other resuld
+         by changing the state (using drop down) and press "Update" button
+8.  You can see your data on the top of "Randomness Testing" (Input Data Drop down) if you have multiple input data.
+    You can select the data and press "Change Data" button.  This will update the GUI and display the result of the data you selected.
+9.  You can save the result to a text file by pressing "Save as Text File" button.
+    This will display a file dialog where you can enter the file name for your result.
+    You can check the text file after the result is saved.
+10. "Reset" button will clear all input and variables.  It is strongly suggested you use this feature if you want to execute test for another set of data
+11. "Exit" button will close this program
