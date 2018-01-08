@@ -193,7 +193,6 @@ class RandomExcursionTestItem:
         self.__chb_var.set(value)
 
     def set_results(self, results):
-        print('set result')
         self.__results = results
         self.update()
 
@@ -201,7 +200,6 @@ class RandomExcursionTestItem:
         match = False
         for result in self.__results:
             if result[0] == self.__state.get():
-                print('Matched')
                 if self.__variant:
                     self.__count.set(result[2])
                 else:

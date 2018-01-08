@@ -25,7 +25,7 @@ from GUI import TestItem
 
 from Tools import Tools
 
-class GUI(Frame):
+class Main(Frame):
 
     # Constructor.  Initialized the variables.
     def __init__(self, master=None):
@@ -64,6 +64,7 @@ class GUI(Frame):
         }
 
         self.__test_result = []
+        self.__test_string = []
 
     def init_window(self):
 
@@ -267,6 +268,7 @@ class GUI(Frame):
             for item in handle:
                 input.append(Tools.string_to_binary(item))
                 data.append(str(count) + str(' ') +item)
+                self.__test_string.append(item)
                 count += 1
 
             print(data)
@@ -286,6 +288,7 @@ class GUI(Frame):
             self.__test_result.append(results)
 
         self.write_results(self.__test_result[0])
+        messagebox.showinfo("Execute", "Test Complete.")
 
     def write_results(self, results):
         """
@@ -317,6 +320,72 @@ class GUI(Frame):
 
     def save_result_to_file(self):
         print('Save to File')
+        print(self.__test_result)
+        if not len(self.__binary_input.get_data()) == 0:
+            output_file = asksaveasfile(mode='w', defaultextension=".txt")
+            output_file.write('Test Data:' + self.__binary_input.get_data() + '\n\n\n')
+            result = self.__test_result[0]
+            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+            self.write_result_to_file(output_file, result)
+            output_file.close()
+            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
+        elif not len(self.__binary_data_file_input.get_data()) == 0:
+            output_file = asksaveasfile(mode='w', defaultextension=".txt")
+            output_file.write('Test Data File:' + self.__binary_data_file_input.get_data() + '\n\n\n')
+            result = self.__test_result[0]
+            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+            self.write_result_to_file(output_file, result)
+            output_file.close()
+            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
+        elif not len(self.__string_data_file_input.get_data()) == 0:
+            output_file = asksaveasfile(mode='w', defaultextension=".txt")
+            output_file.write('Test Data File:' + self.__string_data_file_input.get_data() + '\n\n')
+            count = 0
+            for item in self.__test_string:
+                output_file.write('Test ' + str(count+1) + ':\n')
+                output_file.write('String to be tested: %s' % item)
+                output_file.write('Binary of the given String: %s\n\n' % Tools.string_to_binary(item))
+                output_file.write('Result:\n')
+                output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+                self.write_result_to_file(output_file, self.__test_result[count])
+                output_file.write('\n\n')
+                count += 1
+            output_file.close()
+            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
+
+    def write_result_to_file(self, output_file, result):
+        for count in range(16):
+            if self.__test[count].get_check_box_value() == 1:
+                if count == 10:
+                    output_file.write(self.__test_type[count] + ':\n')
+                    output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
+                    str(result[count][0][0]), self.get_result_string(result[count][0][1]))
+                    output_file.write(output)
+                    output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
+                    str(result[count][1][0]), self.get_result_string(result[count][1][1]))
+                    output_file.write(output)
+                    pass
+                elif count == 14:
+                    output_file.write(self.__test_type[count] + ':\n')
+                    output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'Chi Squared', 'P-Value', 'Conclusion')
+                    output_file.write(output)
+                    for item in result[count]:
+                        output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
+                        item[0], item[2], item[3], self.get_result_string(item[4]))
+                        output_file.write(output)
+                elif count == 15:
+                    output_file.write(self.__test_type[count] + ':\n')
+                    output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'COUNTS', 'P-Value', 'Conclusion')
+                    output_file.write(output)
+                    for item in result[count]:
+                        output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
+                        item[0], item[2], item[3], self.get_result_string(item[4]))
+                        output_file.write(output)
+                else:
+                    output = '%-50s\t%-20s\t%s\n' % (
+                    self.__test_type[count], str(result[count][0]), self.get_result_string(result[count][1]))
+                    output_file.write(output)
+            count += 1
 
     def change_data(self):
         index = int(self.__test_data.get_selected().split(' ')[0])
@@ -354,6 +423,8 @@ class GUI(Frame):
         self.__excursion.reset()
         self.__variant.reset()
         self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
+        self.__test_result = []
+        self.__test_string = []
 
     def exit(self):
         """
@@ -382,6 +453,6 @@ if __name__ == '__main__':
     root.geometry("%dx%d+0+0" % (1280, 950))
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
-    app = GUI(root)
+    app = Main(root)
     app.focus_displayof()
     app.mainloop()

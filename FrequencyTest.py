@@ -73,6 +73,10 @@ class FrequencyTest:
 
         length_of_bit_string = len(binary_data)
 
+
+        if length_of_bit_string < block_size:
+            block_size = length_of_bit_string
+
         # Compute the number of blocks based on the input given.  Discard the remainder
         number_of_blocks = floor(length_of_bit_string / block_size)
 
