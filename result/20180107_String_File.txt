@@ -1,0 +1,968 @@
+Test Data File:/Users/stevenkhoang/PycharmProjects/Randomness_Testing/data/test_data_01.txt
+
+Test 1:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568534f926c25.jpg
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110100110011011100111001011011011000111100101101011011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.05502279538e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000549658886024   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.488511036772      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.33108251353e-87   	Non-Random
+													7.11098692277e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000752       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000752       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 2:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568534fe6c4f9.jpg
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010011001101100101110110110001111010011001101110011011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.25668542991e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.00102800992951    	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.748460391062      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.50420839018e-117  	Non-Random
+													1.2885258775e-56    	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000827       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000827       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 3:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535038979e.jpg
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111000011001111100011100111011111100111001011011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	7.58381197865e-09   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000162540427985   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.0517985979514     	Random
+07. Non-Overlapping Template Matching Test        	0.999914600081      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													4.15263957741e-100  	Non-Random
+													1.94521511428e-39   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000275       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000275       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 4:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685350b507e4.jpg
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110000110001011010111000011011111001011101001011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	6.98180536209e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000549658886024   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.843116827062      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													2.40655996091e-76   	Non-Random
+													1.52695693788e-36   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000002582       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000002582       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 5:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685351a813ff.jpg
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011100011100001111000110001110011110011011001101011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	5.39857101955e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000127511957054   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.1554904742        	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.91567278382e-81   	Non-Random
+													5.03560648192e-39   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000001993       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000001993       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 6:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685352429fac.jpg
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011100101101001100101110011100110110000111000111011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	5.39857101955e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.00102800992951    	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.055561938144      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													4.9257117832e-99    	Non-Random
+													1.0210636365e-53    	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000001993       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000001993       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 7:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685352ee2428.jpg
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110010110010111001011100101101001100101110001011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	6.98180536209e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000675577703419   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.488511036772      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													6.95581653413e-82   	Non-Random
+													7.11098692277e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000002582       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000002582       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 8:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535401e408.jpg
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111010011000011000111001011101001100001110001011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.90485230283e-07   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.00122090013913    	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.147250365981      	Random
+07. Non-Overlapping Template Matching Test        	0.999914600081      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													2.18616779848e-106  	Non-Random
+													4.11137247057e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000010887       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000010887       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 9:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685354a9a8fa.jpg
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111010011000011110011100001111000110011011000011011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	1.37533574121e-07   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000549658886024   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.505406512305      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													5.23194412699e-81   	Non-Random
+													8.05451270878e-39   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000005124       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000005124       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 10:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685355a6f07e.jpg
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011101011100001110110110011011000011011111001011011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	1.57662156139e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000396943229489   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.016017833817      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													3.93479408429e-87   	Non-Random
+													1.22436117229e-44   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000575       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000575       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 11:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685356fc58d3.jpg
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011101101100110110001111010111100011001001100111011101101010111000011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	1.57662156139e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.0013383671419     	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.1554904742        	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													3.93479408429e-87   	Non-Random
+													1.0210636365e-53    	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000575       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000575       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 12:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685359642c45.png
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111100111011011010011001011000111101001101011011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	7.58381197865e-09   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000421200220854   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.147250365981      	Random
+07. Non-Overlapping Template Matching Test        	0.999914600081      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													4.46236290993e-88   	Non-Random
+													4.11137247057e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000275       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000275       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 13:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/4005685359bd9fb3.png
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111100111000101100100111001110011011000101100111011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.25668542991e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000245012074842   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.0983950948323     	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.15281389543e-86   	Non-Random
+													2.09868592598e-44   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000827       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000827       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 14:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535a6a4cb6.png
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111000011101101100001110100110001111000101101101011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	4.16865017401e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000129126900406   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.0983950948323     	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.15281389543e-86   	Non-Random
+													2.09868592598e-44   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000001536       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000001536       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 15:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535ac8a044.png
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011100001110001111100011000011100001101001101001011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	1.76710124756e-07   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000245012074842   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.1554904742        	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													3.93479408429e-87   	Non-Random
+													1.22436117229e-44   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000006597       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000006597       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 16:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535b586d24.png
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110001011010111100011011011001001100101101001011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	3.80931412899e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000549658886024   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.488511036772      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.33108251353e-87   	Non-Random
+													7.11098692277e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000001401       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000001401       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 17:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535bb0bcf6.png
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110001011000101100001100010110001111001101101101011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	1.06892773818e-07   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.00102800992951    	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.017457561522      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													3.34779751502e-86   	Non-Random
+													3.58149961058e-44   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000003975       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000003975       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 18:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535c0410c5.png
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110001111000011010011000111000011000111101011011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	6.98180536209e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000127511957054   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.235050297656      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.33108251353e-87   	Non-Random
+													7.11098692277e-45   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000002582       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000002582       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 19:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535c64381b.png
+Binary of the given String: 11010001110100111010011100001110101011111011111100111101101111010111001111100011101110110111111011111110110110111111011111011101100011110111111011011011111101110110010111011011101111101101111010111001111100011101111110100110000110000110101110110111000110101110011110101110001111011011010011001111100011000111000101011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.05502279538e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000127511957054   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.235050297656      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.33108251353e-87   	Non-Random
+													7.14265000615e-51   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000752       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000752       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 20:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535cfce007.png
+Binary of the given String: 1101000111010011101001110000111010101111101111110011110110111101011100111110001110111011011111101111111011011011111101111101110110001111011111101101101111110111011001011101101110111110110111101011100111110001110111111010011000011000011010111011011100011010111001111010111000111100110110001111001011100001100001101111011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	2.25668542991e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	3.40244605512e-05   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.862911983456      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													1.15281389543e-86   	Non-Random
+													1.4393838662e-41    	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000000827       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000000827       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+
+Test 21:
+String to be tested: http://g-ugc.oovoo.com/nemo-ugc/400568535d4d83f4.png
+Binary of the given String: 110100011101001110100111000011101010111110111111001111011011110101110011111000111011101101111110111111101101101111110111110111011000111101111110110110111111011101100101110110111011111011011110101110011111000111011111101001100001100001101011101101110001101011100111101011100100110100110010011100011001111001101101001011101110000110111011001111010
+
+Result:
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	5.39857101955e-08   	Non-Random
+02. Frequency Test within a Block                 	2.03774876302e-07   	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	0.000245012074842   	Non-Random
+05. Binary Matrix Rank Test                       	-1.0                	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.354264330485      	Random
+07. Non-Overlapping Template Matching Test        	0.999902589319      	Random
+08. Overlapping Template Matching Test            	nan                 	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	-1.0                	Non-Random
+11. Serial test:
+													3.93479408429e-87   	Non-Random
+													1.32405655228e-50   	Non-Random
+12. Approximate Entropy Test                      	1.0                 	Random
+13. Cummulative Sums (Forward) Test               	1.00000001993       	Random
+14. Cummulative Sums (Reverse) Test               	1.00000001993       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	0.714285714286      	0.982175450874      	Random
+				-3        	1.0                 	0.962565773247      	Random
+				-2        	1.66666666667       	0.893072140736      	Random
+				-1        	2.2                 	0.820835969214      	Random
+				+1        	25.0                	0.000139333791186   	Non-Random
+				+2        	22.4469135802       	0.000430459152606   	Non-Random
+				+3        	46.9264             	5.88117349655e-09   	Non-Random
+				+4        	48.2571428571       	3.14749249263e-09   	Non-Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-1.0      	1                   	0.205903210732      	Random
+				+1.0      	10                  	0.113846298007      	Random
+				+2.0      	13                  	0.144127034816      	Random
+				+3.0      	8                   	0.671373240541      	Random
+				+4.0      	2                   	0.719917853194      	Random
+				+5.0      	1                   	0.67328997966       	Random
+				+6.0      	2                   	0.774848422163      	Random
+				+7.0      	2                   	0.792460088608      	Random
+				+8.0      	1                   	0.743971478075      	Random
+				+9.0      	1                   	0.759006268528      	Random
+
+

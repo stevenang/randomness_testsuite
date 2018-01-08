@@ -1,0 +1,50 @@
+Test Data File:/Users/stevenkhoang/PycharmProjects/Randomness_Testing/data/data.e
+
+
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	0.953748628528      	Random
+02. Frequency Test within a Block                 	0.211071543702      	Random
+03. Run Test                                      	0.56191688503       	Random
+04. Longest Run of Ones in a Block                	0.718945329899      	Random
+05. Binary Matrix Rank Test                       	0.3061558375306767  	Random
+06. Discrete Fourier Transform (Spectral) Test    	0.847186705069      	Random
+07. Non-Overlapping Template Matching Test        	0.0787901326767     	Random
+08. Overlapping Template Matching Test            	0.110433685414      	Random
+09. Maurer's Universal Statistical test           	0.282567947826      	Random
+10. Linear Complexity Test                        	0.826334770404      	Random
+11. Serial test:
+													0.766181646833      	Random
+													0.462921324096      	Random
+12. Approximate Entropy Test                      	0.700073388115      	Random
+13. Cummulative Sums (Forward) Test               	0.669886464168      	Random
+14. Cummulative Sums (Reverse) Test               	0.72426530997       	Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	3.83569821299       	0.573305694995      	Random
+				-3        	7.31870711409       	0.197996020218      	Random
+				-2        	7.86192725164       	0.164011049379      	Random
+				-1        	15.6926174497       	0.00777872309647    	Non-Random
+				+1        	2.43087248322       	0.786867905178      	Random
+				+2        	4.79890628884       	0.440911736646      	Random
+				+3        	2.35704053691       	0.797853971688      	Random
+				+4        	2.4887672642        	0.778185785232      	Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-9.0      	1450                	0.858945739825      	Random
+				-8.0      	1435                	0.794754956255      	Random
+				-7.0      	1380                	0.576248618468      	Random
+				-6.0      	1366                	0.493416934086      	Random
+				-5.0      	1412                	0.633872669141      	Random
+				-4.0      	1475                	0.917283147792      	Random
+				-3.0      	1480                	0.934707791835      	Random
+				-2.0      	1468                	0.816012036618      	Random
+				-1.0      	1502                	0.826009012833      	Random
+				+1.0      	1409                	0.137860608909      	Random
+				+2.0      	1369                	0.200641913855      	Random
+				+3.0      	1396                	0.441253622156      	Random
+				+4.0      	1479                	0.939290606068      	Random
+				+5.0      	1599                	0.505682682169      	Random
+				+6.0      	1628                	0.44593471065       	Random
+				+7.0      	1619                	0.512206885616      	Random
+				+8.0      	1620                	0.538634697777      	Random
+				+9.0      	1610                	0.593930395822      	Random
