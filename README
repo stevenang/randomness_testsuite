@@ -1,3 +1,10 @@
+Environment Requirements:
+    1. Python 3.6
+    2. Python package - Numpy (pip3 install numpy)
+    3. Python package - SciPy (pip3 install scipy)
+
+
+
 1.  You can start the program using your IDE feature (like run) to run Main.py or execute the following command in command prompt:
     python3 Main.py
 
