@@ -87,8 +87,8 @@ class Main(Frame):
         self.__stest_selection_label_frame.config(font=("Calibri", 14))
         self.__stest_selection_label_frame.place(x=20, y=180, width=1240, height=725)
 
-        self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
-        change_data_button = CustomButton(self.__stest_selection_label_frame, 'Change Data', 1050, 5, 180, action=self.change_data)
+        #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
+        #change_data_button = CustomButton(self.__stest_selection_label_frame, 'Change Data', 1050, 5, 180, action=self.change_data)
 
         test_type_label = LabelTag(self.__stest_selection_label_frame, 'Test Type', 10, 35, 350, 12, border=2,relief="groove")
         p_value_label = LabelTag(self.__stest_selection_label_frame, 'P-Value', 365, 35, 500, 12, border=2,relief="groove")
@@ -266,13 +266,17 @@ class Main(Frame):
             if self.__file_name:
                 handle = open(self.__file_name)
             for item in handle:
-                input.append(Tools.string_to_binary(item))
-                data.append(str(count) + str(' ') +item)
-                self.__test_string.append(item)
+                if item.startswith('http://'):
+                    url = Tools.url_to_binary(item)
+                    data.append(Tools.string_to_binary(url))
+                else:
+                    data.append(Tools.string_to_binary(item))
                 count += 1
-
             print(data)
-            self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
+            input.append(''.join(data))
+
+            #print(data)
+            #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
 
         for test_data in input:
             count = 0
@@ -340,16 +344,19 @@ class Main(Frame):
         elif not len(self.__string_data_file_input.get_data()) == 0:
             output_file = asksaveasfile(mode='w', defaultextension=".txt")
             output_file.write('Test Data File:' + self.__string_data_file_input.get_data() + '\n\n')
-            count = 0
-            for item in self.__test_string:
-                output_file.write('Test ' + str(count+1) + ':\n')
-                output_file.write('String to be tested: %s' % item)
-                output_file.write('Binary of the given String: %s\n\n' % Tools.string_to_binary(item))
-                output_file.write('Result:\n')
-                output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-                self.write_result_to_file(output_file, self.__test_result[count])
-                output_file.write('\n\n')
-                count += 1
+            #count = 0
+            #for item in self.__test_string:
+            #    output_file.write('Test ' + str(count+1) + ':\n')
+            #    output_file.write('String to be tested: %s' % item)
+            #    output_file.write('Binary of the given String: %s\n\n' % Tools.string_to_binary(item))
+            #    output_file.write('Result:\n')
+            #    output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+            #    self.write_result_to_file(output_file, self.__test_result[count])
+            #    output_file.write('\n\n')
+            #    count += 1
+            result = self.__test_result[0]
+            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+            self.write_result_to_file(output_file, result)
             output_file.close()
             messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
 
@@ -387,10 +394,10 @@ class Main(Frame):
                     output_file.write(output)
             count += 1
 
-    def change_data(self):
-        index = int(self.__test_data.get_selected().split(' ')[0])
-        print(self.__test_result[index-1])
-        self.write_results(self.__test_result[index-1])
+    #def change_data(self):
+    #    index = int(self.__test_data.get_selected().split(' ')[0])
+    #    print(self.__test_result[index-1])
+    #    self.write_results(self.__test_result[index-1])
 
     def reset(self):
         """
@@ -422,7 +429,7 @@ class Main(Frame):
         self.__cusum_r.reset()
         self.__excursion.reset()
         self.__variant.reset()
-        self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
+        #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
         self.__test_result = []
         self.__test_string = []
 
