@@ -1,10 +1,14 @@
 from tkinter import Button
+from tkinter import Canvas
 from tkinter import Checkbutton
 from tkinter import DISABLED
 from tkinter import Entry
+from tkinter import Frame
 from tkinter import IntVar
 from tkinter import Label
+from tkinter import LabelFrame
 from tkinter import OptionMenu
+from tkinter import Scrollbar
 from tkinter import StringVar
 
 class CustomButton:
@@ -16,7 +20,7 @@ class CustomButton:
 
 class Input:
 
-    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, state='disabled'):
+    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, state='disabled', button_xcoor=1050, button_width=180):
         # Setup Labels
         label = Label(master, text=title)
         label.config(font=("Calibri", 12))
@@ -31,7 +35,7 @@ class Input:
             button_title = 'Select ' + title
             button = Button(master, text=button_title, command=action)
             button.config(font=("Calibri", 10))
-            button.place(x=1050, y=y_coor, width=180, height=25)
+            button.place(x=button_xcoor, y=y_coor, width=180, height=25)
 
     def set_data(self, value):
         self.__data.set(value)
@@ -74,31 +78,40 @@ class Options:
 
 class TestItem:
 
-    def __init__(self, master, title, x_coor, y_coor, serial=False):
+    def __init__(self, master, title, x_coor, y_coor, serial=False, p_value_x_coor=365, p_value_width=500, result_x_coor=870, result_width=350, font_size=12, two_columns=False):
         self.__chb_var = IntVar()
         self.__p_value = StringVar()
         self.__result = StringVar()
         self.__p_value_02 = StringVar()
         self.__result_02 = StringVar()
         checkbox = Checkbutton(master, text=title, variable=self.__chb_var)
+        checkbox.config(font=("Calibri", font_size))
         checkbox.place(x=x_coor, y=y_coor)
 
         p_value_entry = Entry(master, textvariable=self.__p_value)
         p_value_entry.config(state=DISABLED)
-        p_value_entry.place(x=365, y=y_coor, width=500, height=25)
+        p_value_entry.place(x=p_value_x_coor, y=y_coor, width=p_value_width, height=25)
 
         result_entry = Entry(master, textvariable=self.__result)
         result_entry.config(state=DISABLED)
-        result_entry.place(x=870, y=y_coor, width=350, height=25)
+        result_entry.place(x=result_x_coor, y=y_coor, width=result_width, height=25)
 
-        if serial:
+        if serial and two_columns:
             p_value_entry_02 = Entry(master, textvariable=self.__p_value_02)
             p_value_entry_02.config(state=DISABLED)
-            p_value_entry_02.place(x=365, y=y_coor+30, width=500, height=25)
+            p_value_entry_02.place(x=875, y=y_coor, width=235, height=25)
 
             result_entry_02 = Entry(master, textvariable=self.__result_02)
             result_entry_02.config(state=DISABLED)
-            result_entry_02.place(x=870, y=y_coor+30, width=350, height=25)
+            result_entry_02.place(x=1115, y=y_coor, width=110, height=25)
+        elif serial and not two_columns:
+            p_value_entry_02 = Entry(master, textvariable=self.__p_value_02)
+            p_value_entry_02.config(state=DISABLED)
+            p_value_entry_02.place(x=365, y=y_coor+25, width=500, height=25)
+
+            result_entry_02 = Entry(master, textvariable=self.__result_02)
+            result_entry_02.config(state=DISABLED)
+            result_entry_02.place(x=870, y=y_coor+25, width=350, height=25)
 
     def get_check_box_value(self):
         return self.__chb_var.get()
@@ -141,7 +154,7 @@ class TestItem:
 
 class RandomExcursionTestItem:
 
-    def __init__(self, master, title, x_coor, y_coor, data, variant=False):
+    def __init__(self, master, title, x_coor, y_coor, data, variant=False, font_size=11):
         self.__chb_var = IntVar()
         self.__state = StringVar()
         self.__count = StringVar()
@@ -152,9 +165,10 @@ class RandomExcursionTestItem:
         self.__variant = variant
 
         checkbox = Checkbutton(master, text=title, variable=self.__chb_var)
+        checkbox.config(font=("Calibri", font_size))
         checkbox.place(x=x_coor, y=y_coor)
 
-        state_label = LabelTag(master, 'State', (x_coor + 60), (y_coor + 30), width=100, font_size=12, border=2, relief='groove')
+        state_label = LabelTag(master, 'State', (x_coor + 60), (y_coor + 30), width=100, font_size=font_size, border=2, relief='groove')
         if variant:
             self.__state.set('-1.0')
         else:
@@ -162,22 +176,21 @@ class RandomExcursionTestItem:
         state_option = OptionMenu(master, self.__state, *data)
         state_option.place(x=(x_coor + 60), y=(y_coor + 60), height=25, width=100)
         if not variant:
-            xObs_label = LabelTag(master, 'CHI-SQUARED', (x_coor + 165), (y_coor + 30), width=350, font_size=12, border=2,
+            xObs_label = LabelTag(master, 'CHI-SQUARED', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2,
                                    relief='groove')
             xObs_Entry = Entry(master, textvariable=self.__xObs)
             xObs_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
         else:
-            count_label = LabelTag(master, 'Count', (x_coor + 165), (y_coor + 30), width=350, font_size=12,
-                                  border=2,
-                                  relief='groove')
+            count_label = LabelTag(master, 'Count', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size,
+                                  border=2, relief='groove')
             count_Entry = Entry(master, textvariable=self.__count)
             count_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
             pass
-        p_value_label = LabelTag(master, 'P-Value', (x_coor + 520), (y_coor + 30), width=350, font_size=12, border=2,
+        p_value_label = LabelTag(master, 'P-Value', (x_coor + 520), (y_coor + 30), width=350, font_size=font_size, border=2,
                                relief='groove')
         p_value_Entry = Entry(master, textvariable=self.__p_value)
         p_value_Entry.place(x=(x_coor + 520), y=(y_coor + 60), width=350, height=25)
-        conclusion_label = LabelTag(master, 'Conclusion', (x_coor + 875), (y_coor + 30), width=150, font_size=12, border=2,
+        conclusion_label = LabelTag(master, 'Conclusion', (x_coor + 875), (y_coor + 30), width=150, font_size=font_size, border=2,
                                relief='groove')
         conclusion_Entry = Entry(master, textvariable=self.__result)
         conclusion_Entry.place(x=(x_coor + 875), y=(y_coor + 60), width=150, height=25)
@@ -236,3 +249,29 @@ class RandomExcursionTestItem:
         self.__p_value.set('')
         self.__result.set('')
 
+class ScrollLabelFrame(LabelFrame):
+    def __init__(self, parent, label):
+        super().__init__(master=parent, text=label, padx=5, pady=5)
+        self._canvas = Canvas(self, background="#ffffff")
+        self.inner_frame = Frame(self._canvas, background="#ffffff")
+        self._scroll_bar = Scrollbar(self, orient="vertical", command=self._canvas.yview)
+        self._canvas.configure(yscrollcommand=self._scroll_bar.set)
+        self._scroll_bar.pack(side="right", fill="y")
+        self._canvas.pack(side="left", fill="both", expand=True)
+        self._canvas_window = self._canvas.create_window((4,4), window=self.inner_frame, anchor="nw",            #add view port frame to canvas
+                                  tags="self.inner_frame")
+
+        self.inner_frame.bind("<Configure>", self.onFrameConfigure)  # bind an event whenever the size of the viewPort frame changes.
+        self._canvas.bind("<Configure>", self.onCanvasConfigure)  # bind an event whenever the size of the viewPort frame changes.
+
+        self.onFrameConfigure(None)
+
+    def onFrameConfigure(self, event):
+        '''Reset the scroll region to encompass the inner frame'''
+        self._canvas.configure(scrollregion=self._canvas.bbox(
+            "all"))  # whenever the size of the frame changes, alter the scroll region respectively.
+
+    def onCanvasConfigure(self, event):
+        '''Reset the canvas window to encompass inner frame when required'''
+        canvas_width = event.width
+        self._canvas.itemconfig(self._canvas_window, width=canvas_width)
