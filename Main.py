@@ -85,64 +85,64 @@ class Main(Frame):
         # Setup LabelFrame for Randomness Test
         self.__stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self.__stest_selection_label_frame.config(font=("Calibri", 14))
-        self.__stest_selection_label_frame.place(x=20, y=180, width=1240, height=725)
+        self.__stest_selection_label_frame.place(x=20, y=155, width=1240, height=600)
 
         #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', [''], 10, 5, 900)
         #change_data_button = CustomButton(self.__stest_selection_label_frame, 'Change Data', 1050, 5, 180, action=self.change_data)
 
-        test_type_label = LabelTag(self.__stest_selection_label_frame, 'Test Type', 10, 35, 350, 12, border=2,relief="groove")
-        p_value_label = LabelTag(self.__stest_selection_label_frame, 'P-Value', 365, 35, 500, 12, border=2,relief="groove")
-        result_label = LabelTag(self.__stest_selection_label_frame, 'Result', 870, 35, 350, 12, border=2,relief="groove")
+        test_type_label = LabelTag(self.__stest_selection_label_frame, 'Test Type', 10, 5, 350, 12, border=2,relief="groove")
+        p_value_label = LabelTag(self.__stest_selection_label_frame, 'P-Value', 365, 5, 500, 12, border=2,relief="groove")
+        result_label = LabelTag(self.__stest_selection_label_frame, 'Result', 870, 5, 350, 12, border=2,relief="groove")
 
         self.__test = []
 
-        self.__monobit = TestItem(self.__stest_selection_label_frame, self.__test_type[0], 10, 65)
+        self.__monobit = TestItem(self.__stest_selection_label_frame, self.__test_type[0], 10, 35)
         self.__test.append(self.__monobit)
 
-        self.__block = TestItem(self.__stest_selection_label_frame, self.__test_type[1], 10, 95)
+        self.__block = TestItem(self.__stest_selection_label_frame, self.__test_type[1], 10, 60)
         self.__test.append(self.__block)
 
-        self.__run = TestItem(self.__stest_selection_label_frame, self.__test_type[2], 10, 125)
+        self.__run = TestItem(self.__stest_selection_label_frame, self.__test_type[2], 10, 85)
         self.__test.append(self.__run)
 
-        self.__long_run = TestItem(self.__stest_selection_label_frame, self.__test_type[3], 10, 155)
+        self.__long_run = TestItem(self.__stest_selection_label_frame, self.__test_type[3], 10, 110)
         self.__test.append(self.__long_run)
 
-        self.__rank = TestItem(self.__stest_selection_label_frame, self.__test_type[4], 10, 185)
+        self.__rank = TestItem(self.__stest_selection_label_frame, self.__test_type[4], 10, 135)
         self.__test.append(self.__rank)
 
-        self.__spectral = TestItem(self.__stest_selection_label_frame, self.__test_type[5], 10, 215)
+        self.__spectral = TestItem(self.__stest_selection_label_frame, self.__test_type[5], 10, 160)
         self.__test.append(self.__spectral)
 
-        self.__non_overlappong = TestItem(self.__stest_selection_label_frame, self.__test_type[6], 10, 245)
+        self.__non_overlappong = TestItem(self.__stest_selection_label_frame, self.__test_type[6], 10, 185)
         self.__test.append(self.__non_overlappong)
 
-        self.__overlapping = TestItem(self.__stest_selection_label_frame, self.__test_type[7], 10, 275)
+        self.__overlapping = TestItem(self.__stest_selection_label_frame, self.__test_type[7], 10, 210)
         self.__test.append(self.__overlapping)
 
-        self.__universal = TestItem(self.__stest_selection_label_frame, self.__test_type[8], 10, 305)
+        self.__universal = TestItem(self.__stest_selection_label_frame, self.__test_type[8], 10, 235)
         self.__test.append(self.__universal)
 
-        self.__linear = TestItem(self.__stest_selection_label_frame, self.__test_type[9], 10, 335)
+        self.__linear = TestItem(self.__stest_selection_label_frame, self.__test_type[9], 10, 260)
         self.__test.append(self.__linear)
 
-        self.__serial = TestItem(self.__stest_selection_label_frame, self.__test_type[10], 10, 365, serial=True)
+        self.__serial = TestItem(self.__stest_selection_label_frame, self.__test_type[10], 10, 285, serial=True)
         self.__test.append(self.__serial)
 
-        self.__entropy = TestItem(self.__stest_selection_label_frame, self.__test_type[11], 10, 425)
+        self.__entropy = TestItem(self.__stest_selection_label_frame, self.__test_type[11], 10, 310)
         self.__test.append(self.__entropy)
 
-        self.__cusum_f = TestItem(self.__stest_selection_label_frame, self.__test_type[12], 10, 455)
+        self.__cusum_f = TestItem(self.__stest_selection_label_frame, self.__test_type[12], 10, 335)
         self.__test.append(self.__cusum_f)
 
-        self.__cusum_r = TestItem(self.__stest_selection_label_frame, self.__test_type[13], 10, 485)
+        self.__cusum_r = TestItem(self.__stest_selection_label_frame, self.__test_type[13], 10, 360)
         self.__test.append(self.__cusum_r)
 
-        self.__excursion = RandomExcursionTestItem(self.__stest_selection_label_frame, self.__test_type[14], 10, 515,
+        self.__excursion = RandomExcursionTestItem(self.__stest_selection_label_frame, self.__test_type[14], 10, 385,
                                                    ['-4', '-3', '-2', '-1', '+1', '+2', '+3', '+4'])
         self.__test.append(self.__excursion)
 
-        self.__variant = RandomExcursionTestItem(self.__stest_selection_label_frame, self.__test_type[15], 10, 605,
+        self.__variant = RandomExcursionTestItem(self.__stest_selection_label_frame, self.__test_type[15], 10, 475,
                                                    ['-9.0', '-8.0', '-7.0', '-6.0', '-5.0', '-4.0', '-3.0', '-2.0', '-1.0',
                                                     '+1.0', '+2.0', '+3.0', '+4.0', '+5.0', '+6.0', '+7.0', '+8.0', '+9.0'], variant=True)
         self.__test.append(self.__variant)
@@ -164,12 +164,12 @@ class Main(Frame):
             self.__cusum_r
         ]
 
-        select_all_button = CustomButton(self.master, 'Select All Test', 20, 910, 100, self.select_all)
-        deselect_all_button = CustomButton(self.master, 'De-Select All Test', 125, 910, 150, self.deselect_all)
-        execute_button = CustomButton(self.master, 'Execute Test', 280, 910, 100, self.execute)
-        save_button = CustomButton(self.master, 'Save as Text File', 385, 910, 100, self.save_result_to_file)
-        reset_button = CustomButton(self.master, 'Reset', 490, 910, 100, self.reset)
-        exit = CustomButton(self.master, 'Exit Program', 595, 910, 100, self.exit)
+        select_all_button = CustomButton(self.master, 'Select All Test', 20, 760, 100, self.select_all)
+        deselect_all_button = CustomButton(self.master, 'De-Select All Test', 125, 760, 150, self.deselect_all)
+        execute_button = CustomButton(self.master, 'Execute Test', 280, 760, 100, self.execute)
+        save_button = CustomButton(self.master, 'Save as Text File', 385, 760, 100, self.save_result_to_file)
+        reset_button = CustomButton(self.master, 'Reset', 490, 760, 100, self.reset)
+        exit = CustomButton(self.master, 'Exit Program', 595, 760, 100, self.exit)
 
     def select_binary_file(self):
         """
@@ -457,7 +457,7 @@ class Main(Frame):
 if __name__ == '__main__':
     root = Tk()
     root.resizable(0,0)
-    root.geometry("%dx%d+0+0" % (1280, 950))
+    root.geometry("%dx%d+0+0" % (1280, 800))
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
     app = Main(root)
