@@ -1,4 +1,4 @@
-#NIST Randomness Testsuit
+# NIST Randomness Testsuit
 
 This is a Python implementation of NIST's A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications
 
