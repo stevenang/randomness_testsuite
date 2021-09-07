@@ -27,7 +27,7 @@ print('2.2. Block Frequency Test:\t\t\t\t\t\t\t\t', FrequencyTest.block_frequenc
 print('2.3. Run Test:\t\t\t\t\t\t\t\t\t\t\t', RunTest.run_test(binary_data[:1000000]))
 print('2.4. Run Test (Longest Run of Ones): \t\t\t\t\t', RunTest.longest_one_block_test(binary_data[:1000000]))
 print('2.5. Binary Matrix Rank Test:\t\t\t\t\t\t\t', Matrix.binary_matrix_rank_text(binary_data[:1000000]))
-print('2.6. Discrete Fourier Transform (Spectral) Test: \t\t', SpectralTest.sepctral_test(binary_data[:1000000]))
+print('2.6. Discrete Fourier Transform (Spectral) Test: \t\t', SpectralTest.spectral_test(binary_data[:1000000]))
 print('2.7. Non-overlapping Template Matching Test:\t\t\t', TemplateMatching.non_overlapping_test(binary_data[:1000000], '000000001'))
 print('2.8. Overlappong Template Matching Test: \t\t\t\t', TemplateMatching.overlapping_patterns(binary_data[:1000000]))
 print('2.9. Universal Statistical Test:\t\t\t\t\t\t', Universal.statistical_test(binary_data[:1000000]))
