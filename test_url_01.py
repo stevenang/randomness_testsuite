@@ -28,7 +28,7 @@ test_function = {
             2:rt.run_test,
             3:rt.longest_one_block_test,
             4:mt.binary_matrix_rank_text,
-            5:st.sepctral_test,
+            5:st.spectral_test,
             6:tm.non_overlapping_test,
             7:tm.overlapping_patterns,
             8:ut.statistical_test,
