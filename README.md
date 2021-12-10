@@ -18,7 +18,7 @@ pip3 install numpy, scipy
     python3 Main.py
 ```
 * Once you saw the interface, you can start using the test suite.
-![Test Suite Screenshot](https://astevekho.s3.us-east-2.amazonaws.com/Screen+Shot+2019-12-11+at+22.24.08.png)
+![Test Suite Screenshot](https://user-images.githubusercontent.com/25377399/145481469-183b14c3-cad8-4a8b-a841-7d45a09714a8.png)
 
     * Input Data - Input Data contains Binary Data, Binary Data File and String Data File
     * Binary Data - You can only enter a BINARY STRING here (ex:1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000)
