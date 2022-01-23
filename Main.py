@@ -368,10 +368,10 @@ class Main(Frame):
             #    output_file.write('Binary of the given String: %s\n\n' % Tools.string_to_binary(item))
             #    output_file.write('Result:\n')
             #    output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-            #    self.write_result_to_file(output_file, self.__test_result[count])
+            #    self.write_result_to_file(output_file, self._test_result[count])
             #    output_file.write('\n\n')
             #    count += 1
-            result = self.__test_result[0]
+            result = self._test_result[0]
             output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
             self.write_result_to_file(output_file, result)
             output_file.close()
