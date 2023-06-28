@@ -91,20 +91,20 @@ class Main(Frame):
         # Setup LabelFrame for Randomness Test
         self._stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self._stest_selection_label_frame.config(font=("Calibri", 14))
-        self._stest_selection_label_frame.place(x=20, y=155, width=1240, height=450)
+        self._stest_selection_label_frame.place(x=20, y=155, width=1260, height=450)
 
-        test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 10, border=2,
+        test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 11, border=2,
                                    relief="groove")
-        p_value_label_01 = LabelTag(self._stest_selection_label_frame, 'P-Value', 265, 5, 235, 10, border=2,
+        p_value_label_01 = LabelTag(self._stest_selection_label_frame, 'P-Value', 265, 5, 235, 11, border=2,
                                  relief="groove")
-        result_label_01 = LabelTag(self._stest_selection_label_frame, 'Result', 505, 5, 110, 10, border=2,
+        result_label_01 = LabelTag(self._stest_selection_label_frame, 'Result', 505, 5, 110, 11, border=2,
                                 relief="groove")
 
-        test_type_label_02 = LabelTag(self._stest_selection_label_frame, 'Test Type', 620, 5, 250, 10, border=2,
+        test_type_label_02 = LabelTag(self._stest_selection_label_frame, 'Test Type', 620, 5, 250, 11, border=2,
                                       relief="groove")
-        p_value_label_02 = LabelTag(self._stest_selection_label_frame, 'P-Value', 875, 5, 235, 10, border=2,
+        p_value_label_02 = LabelTag(self._stest_selection_label_frame, 'P-Value', 875, 5, 235, 11, border=2,
                                     relief="groove")
-        result_label_02 = LabelTag(self._stest_selection_label_frame, 'Result', 1115, 5, 110, 10, border=2,
+        result_label_02 = LabelTag(self._stest_selection_label_frame, 'Result', 1115, 5, 110, 11, border=2,
                                    relief="groove")
 
         self._test = []
