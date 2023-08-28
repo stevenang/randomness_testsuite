@@ -324,7 +324,20 @@ class Main(Frame):
         """
         count = 0
         for result in results:
-            if not len(result) == 0:
+            if len(result) == 0:
+                if count == 10:
+                    self._result_field[count].set_p_value('')
+                    self._result_field[count].set_result_value('')
+                    self._result_field[count].set_p_value_02('')
+                    self._result_field[count].set_result_value_02('')
+                elif count == 14:
+                    self._excursion.set_results('')
+                elif count == 15:
+                    self._variant.set_results('')
+                else:
+                    self._result_field[count].set_p_value('')
+                    self._result_field[count].set_result_value('')
+            else:
                 if count == 10:
                     self._result_field[count].set_p_value(result[0][0])
                     self._result_field[count].set_result_value(self.get_result_string(result[0][1]))
