@@ -34,20 +34,20 @@ class Main(Frame):
 
     def init_variables(self):
 
-        self._test_type = ['01. Frequency Test (Monobit)',
+        self._test_type = ['01. Frequency (Monobit) Test',
                             '02. Frequency Test within a Block',
-                            '03. Run Test',
-                            '04. Longest Run of Ones in a Block',
+                            '03. Runs Test',
+                            '04. Test for the Longest Run of Ones in a Block',
                             '05. Binary Matrix Rank Test',
                             '06. Discrete Fourier Transform (Spectral) Test',
-                            '07. Non-Overlapping Template Matching Test',
+                            '07. Non-overlapping Template Matching Test',
                             '08. Overlapping Template Matching Test',
-                            '09. Maurer\'s Universal Statistical test',
+                            '09. Maurer\'s "Universal Statistical" Test',
                             '10. Linear Complexity Test',
-                            '11. Serial test',
+                            '11. Serial Test',
                             '12. Approximate Entropy Test',
-                            '13. Cummulative Sums (Forward) Test',
-                            '14. Cummulative Sums (Reverse) Test',
+                            '13. Cumulative Sums Test (Forward)',
+                            '14. Cumulative Sums Test (Backward)',
                             '15. Random Excursions Test',
                             '16. Random Excursions Variant Test']
 
