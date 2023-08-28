@@ -308,7 +308,7 @@ class Main(Frame):
                         else:
                             results[count] = self.__test_function[count](test_data)
                     count += 1
-            self._test_result.append(results)
+                self._test_result.insert(0, results)
 
             self.write_results(self._test_result[0])
             messagebox.showinfo("Execute", "Test Complete.")
