@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfile
@@ -295,21 +296,24 @@ class Main(Frame):
             #print(data)
             #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
 
-        for test_data in input:
-            count = 0
-            results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
-            for item in self._test:
-                if item.get_check_box_value() == 1:
-                    print(self._test_type[count], ' selected. ', self.__test_function[count](test_data))
-                    if count == 13:
-                        results[count] = self.__test_function[count](test_data, mode=1)
-                    else:
-                        results[count] = self.__test_function[count](test_data)
-                count += 1
+        try:
+            for test_data in input:
+                count = 0
+                results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
+                for item in self._test:
+                    if item.get_check_box_value() == 1:
+                        print(self._test_type[count], 'selected.', self.__test_function[count](test_data))
+                        if count == 13:
+                            results[count] = self.__test_function[count](test_data, mode=1)
+                        else:
+                            results[count] = self.__test_function[count](test_data)
+                    count += 1
             self._test_result.append(results)
 
-        self.write_results(self._test_result[0])
-        messagebox.showinfo("Execute", "Test Complete.")
+            self.write_results(self._test_result[0])
+            messagebox.showinfo("Execute", "Test Complete.")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     def write_results(self, results):
         """
@@ -466,12 +470,13 @@ class Main(Frame):
         :param result: Result of the test (either True or False)
         :return: str (Either 'Random' for True and 'Non-Random' for False
         """
-        if result == True:
+        if result:
             return 'Random'
         else:
             return 'Non-Random'
 
 if __name__ == '__main__':
+    np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
     root.geometry("%dx%d+0+0" % (1300, 650))
