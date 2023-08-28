@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfile
@@ -34,20 +35,20 @@ class Main(Frame):
 
     def init_variables(self):
 
-        self._test_type = ['01. Frequency Test (Monobit)',
+        self._test_type = ['01. Frequency (Monobit) Test',
                             '02. Frequency Test within a Block',
-                            '03. Run Test',
-                            '04. Longest Run of Ones in a Block',
+                            '03. Runs Test',
+                            '04. Test for the Longest Run of Ones in a Block',
                             '05. Binary Matrix Rank Test',
                             '06. Discrete Fourier Transform (Spectral) Test',
-                            '07. Non-Overlapping Template Matching Test',
+                            '07. Non-overlapping Template Matching Test',
                             '08. Overlapping Template Matching Test',
-                            '09. Maurer\'s Universal Statistical test',
+                            '09. Maurer\'s "Universal Statistical" Test',
                             '10. Linear Complexity Test',
-                            '11. Serial test',
+                            '11. Serial Test',
                             '12. Approximate Entropy Test',
-                            '13. Cummulative Sums (Forward) Test',
-                            '14. Cummulative Sums (Reverse) Test',
+                            '13. Cumulative Sums Test (Forward)',
+                            '14. Cumulative Sums Test (Backward)',
                             '15. Random Excursions Test',
                             '16. Random Excursions Variant Test']
 
@@ -91,20 +92,20 @@ class Main(Frame):
         # Setup LabelFrame for Randomness Test
         self._stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self._stest_selection_label_frame.config(font=("Calibri", 14))
-        self._stest_selection_label_frame.place(x=20, y=155, width=1240, height=450)
+        self._stest_selection_label_frame.place(x=20, y=155, width=1260, height=450)
 
-        test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 10, border=2,
+        test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 11, border=2,
                                    relief="groove")
-        p_value_label_01 = LabelTag(self._stest_selection_label_frame, 'P-Value', 265, 5, 235, 10, border=2,
+        p_value_label_01 = LabelTag(self._stest_selection_label_frame, 'P-Value', 265, 5, 235, 11, border=2,
                                  relief="groove")
-        result_label_01 = LabelTag(self._stest_selection_label_frame, 'Result', 505, 5, 110, 10, border=2,
+        result_label_01 = LabelTag(self._stest_selection_label_frame, 'Result', 505, 5, 110, 11, border=2,
                                 relief="groove")
 
-        test_type_label_02 = LabelTag(self._stest_selection_label_frame, 'Test Type', 620, 5, 250, 10, border=2,
+        test_type_label_02 = LabelTag(self._stest_selection_label_frame, 'Test Type', 620, 5, 250, 11, border=2,
                                       relief="groove")
-        p_value_label_02 = LabelTag(self._stest_selection_label_frame, 'P-Value', 875, 5, 235, 10, border=2,
+        p_value_label_02 = LabelTag(self._stest_selection_label_frame, 'P-Value', 875, 5, 235, 11, border=2,
                                     relief="groove")
-        result_label_02 = LabelTag(self._stest_selection_label_frame, 'Result', 1115, 5, 110, 10, border=2,
+        result_label_02 = LabelTag(self._stest_selection_label_frame, 'Result', 1115, 5, 110, 11, border=2,
                                    relief="groove")
 
         self._test = []
@@ -295,21 +296,25 @@ class Main(Frame):
             #print(data)
             #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
 
-        for test_data in input:
-            count = 0
-            results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
-            for item in self._test:
-                if item.get_check_box_value() == 1:
-                    print(self._test_type[count], ' selected. ', self.__test_function[count](test_data))
-                    if count == 13:
-                        results[count] = self.__test_function[count](test_data, mode=1)
-                    else:
-                        results[count] = self.__test_function[count](test_data)
-                count += 1
-            self._test_result.append(results)
+        try:
+            for test_data in input:
+                count = 0
+                results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
+                for item in self._test:
+                    if item.get_check_box_value() == 1:
+                        print(self._test_type[count], 'selected.', self.__test_function[count](test_data))
+                        if count == 13:
+                            results[count] = self.__test_function[count](test_data, mode=1)
+                        else:
+                            results[count] = self.__test_function[count](test_data)
+                    count += 1
+                self._test_result.insert(0, results)
 
-        self.write_results(self._test_result[0])
-        messagebox.showinfo("Execute", "Test Complete.")
+            self.write_results(self._test_result[0])
+            messagebox.showinfo("Execute", "Test Complete.")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+            print(e)
 
     def write_results(self, results):
         """
@@ -320,7 +325,20 @@ class Main(Frame):
         """
         count = 0
         for result in results:
-            if not len(result) == 0:
+            if len(result) == 0:
+                if count == 10:
+                    self._result_field[count].set_p_value('')
+                    self._result_field[count].set_result_value('')
+                    self._result_field[count].set_p_value_02('')
+                    self._result_field[count].set_result_value_02('')
+                elif count == 14:
+                    self._excursion.set_results('')
+                elif count == 15:
+                    self._variant.set_results('')
+                else:
+                    self._result_field[count].set_p_value('')
+                    self._result_field[count].set_result_value('')
+            else:
                 if count == 10:
                     self._result_field[count].set_p_value(result[0][0])
                     self._result_field[count].set_result_value(self.get_result_string(result[0][1]))
@@ -466,12 +484,13 @@ class Main(Frame):
         :param result: Result of the test (either True or False)
         :return: str (Either 'Random' for True and 'Non-Random' for False
         """
-        if result == True:
+        if result:
             return 'Random'
         else:
             return 'Non-Random'
 
 if __name__ == '__main__':
+    np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
     root.geometry("%dx%d+0+0" % (1300, 650))

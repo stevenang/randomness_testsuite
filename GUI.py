@@ -175,29 +175,30 @@ class RandomExcursionTestItem:
             self.__state.set('+1')
         state_option = OptionMenu(master, self.__state, *data)
         state_option.place(x=(x_coor + 60), y=(y_coor + 60), height=25, width=100)
+        self.__state.trace("w", self.update)
         if not variant:
-            xObs_label = LabelTag(master, 'CHI-SQUARED', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2,
+            xObs_label = LabelTag(master, 'Chi^2', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2,
                                    relief='groove')
             xObs_Entry = Entry(master, textvariable=self.__xObs)
+            xObs_Entry.config(state=DISABLED)
             xObs_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
         else:
             count_label = LabelTag(master, 'Count', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size,
                                   border=2, relief='groove')
             count_Entry = Entry(master, textvariable=self.__count)
+            count_Entry.config(state=DISABLED)
             count_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
             pass
         p_value_label = LabelTag(master, 'P-Value', (x_coor + 520), (y_coor + 30), width=350, font_size=font_size, border=2,
                                relief='groove')
         p_value_Entry = Entry(master, textvariable=self.__p_value)
+        p_value_Entry.config(state=DISABLED)
         p_value_Entry.place(x=(x_coor + 520), y=(y_coor + 60), width=350, height=25)
-        conclusion_label = LabelTag(master, 'Conclusion', (x_coor + 875), (y_coor + 30), width=150, font_size=font_size, border=2,
+        conclusion_label = LabelTag(master, 'Result', (x_coor + 875), (y_coor + 30), width=150, font_size=font_size, border=2,
                                relief='groove')
         conclusion_Entry = Entry(master, textvariable=self.__result)
+        conclusion_Entry.config(state=DISABLED)
         conclusion_Entry.place(x=(x_coor + 875), y=(y_coor + 60), width=150, height=25)
-
-        update_button = Button(master, text='Update', command=self.update)
-        update_button.config(font=("Calibri", 10))
-        update_button.place(x=(x_coor+1030), y=(y_coor + 60), width=180, height=25)
 
     def get_check_box_value(self):
         return self.__chb_var.get()
@@ -209,7 +210,7 @@ class RandomExcursionTestItem:
         self.__results = results
         self.update()
 
-    def update(self):
+    def update(self, *_):
         match = False
         for result in self.__results:
             if result[0] == self.__state.get():
