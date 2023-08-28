@@ -314,6 +314,7 @@ class Main(Frame):
             messagebox.showinfo("Execute", "Test Complete.")
         except Exception as e:
             messagebox.showerror("Error", str(e))
+            print(e)
 
     def write_results(self, results):
         """
