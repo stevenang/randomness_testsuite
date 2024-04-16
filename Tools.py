@@ -25,3 +25,10 @@ class Tools:
         url = input.split('/')[-1].split('.')[0]
 
         return url
+
+    @staticmethod
+    def bytes_to_binary(input:bytes):
+        binary = []
+        for b in input:
+            binary.append(f'{b:08b}')
+        return ''.join(binary)
