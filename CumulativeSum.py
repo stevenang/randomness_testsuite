@@ -51,8 +51,8 @@ class CumulativeSums:
         # absolute values of the partial sums Sk.
         abs_max = max(abs(counts))
 
-        start = int(floor(0.25 * floor(-length_of_binary_data / abs_max) + 1))
-        end = int(floor(0.25 * floor(length_of_binary_data / abs_max) - 1))
+        start = int(floor(0.25 * floor(-length_of_binary_data / abs_max + 1)))
+        end = int(floor(0.25 * floor(length_of_binary_data / abs_max - 1)))
 
         terms_one = []
         for k in range(start, end + 1):
