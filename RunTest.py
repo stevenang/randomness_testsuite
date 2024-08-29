@@ -3,7 +3,7 @@ from math import floor as floor
 from math import sqrt as sqrt
 from scipy.special import erfc as erfc
 from scipy.special import gammaincc as gammaincc
-from scipy import zeros as zeros
+from numpy import zeros
 
 class RunTest:
 
