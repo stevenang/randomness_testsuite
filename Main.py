@@ -302,7 +302,7 @@ class Main(Frame):
                 results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
                 for item in self._test:
                     if item.get_check_box_value() == 1:
-                        print(self._test_type[count], 'selected.', self.__test_function[count](test_data))
+                        print(self._test_type[count], 'selected.')
                         if count == 13:
                             results[count] = self.__test_function[count](test_data, mode=1)
                         else:
