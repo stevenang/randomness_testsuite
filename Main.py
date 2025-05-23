@@ -1,9 +1,12 @@
 import os
+import threading
 import numpy as np
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfile
 from tkinter import messagebox
+import queue
+from tkinter import ttk
 
 from GUI import CustomButton
 from GUI import Input
@@ -74,6 +77,8 @@ class Main(Frame):
 
         self._test_result = []
         self._test_string = []
+        self._latest_results = []
+        self._ui_queue = queue.Queue()
 
     def init_window(self):
         frame_title = 'A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications'
@@ -182,10 +187,21 @@ class Main(Frame):
 
         select_all_button = CustomButton(self.master, 'Select All Test', 20, 615, 100, self.select_all)
         deselect_all_button = CustomButton(self.master, 'De-Select All Test', 125, 615, 150, self.deselect_all)
-        execute_button = CustomButton(self.master, 'Execute Test', 280, 615, 100, self.execute)
+        self.execute_button = CustomButton(self.master, 'Execute Test', 280, 615, 100, self.execute)
         save_button = CustomButton(self.master, 'Save as Text File', 385, 615, 100, self.save_result_to_file)
         reset_button = CustomButton(self.master, 'Reset', 490, 615, 100, self.reset)
-        exit = CustomButton(self.master, 'Exit Program', 595, 615, 100, self.exit)
+        exit_button = CustomButton(self.master, 'Exit Program', 595, 615, 100, self.exit) # This was 'exit' variable, changed to 'exit_button' for clarity
+
+        # Frame for status elements
+        status_frame = ttk.Frame(self.master)
+        status_frame.place(x=20, y=640, width=1260, height=40) # Adjusted y to group status elements
+
+        self.status_label = ttk.Label(status_frame, text="", font=("Calibri", 10), anchor="w")
+        self.status_label.pack(side=TOP, fill=X, padx=5, pady=(0,2)) # pady to give a little space before progressbar
+        
+        self.progress_bar = ttk.Progressbar(status_frame, orient=HORIZONTAL, length=1260, mode='determinate')
+        self.progress_bar.pack(side=BOTTOM, fill=X, padx=5, pady=(2,0))
+        self.progress_bar['value'] = 0 # Ensure initial value is 0
 
     def select_binary_file(self):
         """
@@ -297,24 +313,120 @@ class Main(Frame):
             #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
 
         try:
-            for test_data in input:
-                count = 0
-                results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
-                for item in self._test:
-                    if item.get_check_box_value() == 1:
-                        print(self._test_type[count], 'selected.')
-                        if count == 13:
-                            results[count] = self.__test_function[count](test_data, mode=1)
-                        else:
-                            results[count] = self.__test_function[count](test_data)
-                    count += 1
-                self._test_result.insert(0, results)
+            # The original code has a loop `for test_data in input:`,
+            # implying it could process multiple sequences if 'input' list contained them.
+            # However, the GUI updates and result storage (self._test_result.insert(0, results))
+            # seem oriented towards processing and displaying one sequence at a time.
+            # For threading, we'll process the first valid data found in the 'input' list.
 
-            self.write_results(self._test_result[0])
-            messagebox.showinfo("Execute", "Test Complete.")
+            test_data_to_process = None
+            if input and isinstance(input, list) and len(input) > 0:
+                test_data_to_process = input[0]
+
+            if test_data_to_process is not None:
+                self.execute_button.config(state=DISABLED)
+                self.status_label.config(text="Preparing to execute tests...") # Initial message
+                self.progress_bar['value'] = 0
+                self.progress_bar['maximum'] = 100 # Default max, will be updated by 'start' msg
+
+                self._latest_results = []
+                
+                worker_thread = threading.Thread(target=self._execute_tests_worker, args=(test_data_to_process,))
+                worker_thread.start()
+                
+                # Start polling the queue
+                self.master.after(100, self._process_ui_queue) 
+                # Removed direct messagebox call here; status updates via queue
+            else:
+                messagebox.showwarning("Warning", "No input data to process.")
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
             print(e)
+
+    def _execute_tests_worker(self, test_data_input):
+        """
+        Worker method to execute randomness tests in a separate thread.
+        Stores results in self._latest_results and appends to self._test_result.
+        """
+        try:
+            num_selected_tests = sum(1 for item in self._test if item.get_check_box_value() == 1)
+            self._ui_queue.put({'type': 'start', 'total_tests': num_selected_tests})
+
+            current_run_results = [() for _ in range(len(self._test_type))]
+            completed_count = 0
+            count = 0
+            for item in self._test:
+                if item.get_check_box_value() == 1:
+                    print(self._test_type[count], 'selected.')
+                    # Specific handling for tests
+                    if count == 13: # Cumulative Sums Test (Backward)
+                        current_run_results[count] = self.__test_function[count](test_data_input, mode=1)
+                    else:
+                        current_run_results[count] = self.__test_function[count](test_data_input)
+                    
+                    completed_count += 1
+                    self._ui_queue.put({
+                        'type': 'progress',
+                        'test_name': self._test_type[count],
+                        'completed_tests': completed_count
+                    })
+                count += 1
+            
+            self._latest_results = current_run_results
+            self._test_result.insert(0, self._latest_results) 
+            
+            self._ui_queue.put({'type': 'complete', 'results': self._latest_results})
+            print("Tests completed in worker thread. Results sent to UI queue.")
+
+        except Exception as e:
+            print(f"Error in worker thread: {e}")
+            self._ui_queue.put({'type': 'error', 'message': str(e)})
+
+    def _process_ui_queue(self):
+        """
+        Process messages from the UI queue to update the GUI.
+        """
+        try:
+            while True: # Process all messages currently in the queue
+                msg = self._ui_queue.get_nowait()
+
+                if msg['type'] == 'start':
+                    self.progress_bar['maximum'] = msg['total_tests'] if msg['total_tests'] > 0 else 100
+                    self.progress_bar['value'] = 0
+                    self.status_label.config(text=f"Tests started. Total selected tests: {msg['total_tests']}.")
+                
+                elif msg['type'] == 'progress':
+                    self.progress_bar['value'] = msg['completed_tests']
+                    self.status_label.config(text=f"Running test {msg['completed_tests']}/{self.progress_bar['maximum']}: {msg['test_name']}...")
+                
+                elif msg['type'] == 'complete':
+                    self.status_label.config(text="All tests completed successfully.")
+                    self.write_results(msg['results'])
+                    messagebox.showinfo("Execute", "Test Run Complete.")
+                    self.progress_bar['value'] = 0 
+                    self.execute_button.config(state=NORMAL)
+                    # self.status_label.config(text="") # Optionally clear status after completion
+                    return 
+                
+                elif msg['type'] == 'error':
+                    self.status_label.config(text=f"Error during testing: {msg['message']}")
+                    messagebox.showerror("Error During Testing", msg['message'])
+                    self.progress_bar['value'] = 0 
+                    self.execute_button.config(state=NORMAL)
+                    return 
+
+        except queue.Empty:
+            # If queue is empty, do nothing and continue polling
+            pass
+        except Exception as e:
+            # Handle any other unexpected errors during UI update
+            print(f"Error processing UI queue: {e}")
+            self.status_label.config(text="Error updating UI.")
+            self.execute_button.config(state=NORMAL) # Ensure button is re-enabled
+            return # Stop polling on unexpected error
+
+        self.master.after(100, self._process_ui_queue) # Continue polling
 
     def write_results(self, results):
         """
@@ -448,6 +560,12 @@ class Main(Frame):
         self.__string_data_file_input.set_data('')
         self.__is_binary_file = False
         self.__is_data_file = False
+        # Resetting UI elements
+        if hasattr(self, 'status_label'): # Check if status_label exists
+            self.status_label.config(text="")
+        if hasattr(self, 'progress_bar'): # Check if progress_bar exists
+            self.progress_bar['value'] = 0
+
         self._monobit.reset()
         self._block.reset()
         self._run.reset()
@@ -493,7 +611,7 @@ if __name__ == '__main__':
     np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
-    root.geometry("%dx%d+0+0" % (1300, 650))
+    root.geometry("%dx%d+0+0" % (1300, 680)) # Increased height for progress bar and label
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
     app = Main(root)
