@@ -2,7 +2,7 @@ import os
 import threading
 import numpy as np
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, askopenfilenames # Added askopenfilenames
 from tkinter.filedialog import asksaveasfile
 from tkinter import messagebox
 import queue
@@ -107,30 +107,60 @@ class Main(Frame):
         frame_title = 'A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications'
         title_label = LabelTag(self.master, frame_title, 0, 5, 1260) # Assuming LabelTag uses ttk.Label now
 
-        # Setup LabelFrame for Input - Increased height for batch UI
+        # Setup LabelFrame for Input
         input_label_frame = LabelFrame(self.master, text="Input Data") 
         input_label_frame.config(font=("Calibri", 14))
-        input_label_frame.propagate(0)
-        input_label_frame.place(x=20, y=30, width=1260, height=250) # Increased height from 125 to 250
+        # input_label_frame.propagate(0) # Let it propagate for now with pack, or set specific height
+        input_label_frame.place(x=20, y=30, width=1260) # Removed fixed height, let pack manage it.
 
-        # Single sequence input
-        single_seq_label = ttk.Label(input_label_frame, text="For single sequence (type/paste):", font=("Calibri", 10, "italic"))
-        single_seq_label.place(x=10, y=5)
-        self.__binary_input = Input(input_label_frame, 'Binary Data', 10, 25, change_callback=self._update_binary_input_info)
+        # --- Direct Input Section ---
+        direct_input_section = ttk.Frame(input_label_frame)
+        direct_input_section.pack(side=TOP, fill=X, padx=10, pady=5, anchor='nw')
+
+        single_seq_label = ttk.Label(direct_input_section, text="For single sequence (type/paste):", font=("Calibri", 10, "italic"))
+        single_seq_label.pack(side=TOP, anchor='w', pady=(0,2)) # Small padding below label
+
+        # Frame to contain the Input widget and its info label using place relative to this frame
+        binary_input_line_frame = ttk.Frame(direct_input_section)
+        binary_input_line_frame.pack(side=TOP, fill=X)
+        # Input class uses place internally, x_coor and y_coor are relative to its master.
+        self.__binary_input = Input(binary_input_line_frame, 'Binary Data', 10, 0, change_callback=self._update_binary_input_info)
         
-        self.data_info_label = ttk.Label(input_label_frame, text="Input length: N/A", font=("Calibri", 9))
-        self.data_info_label.place(x=1060, y=25, height=25) # Positioned to the right of the binary input entry
+        self.data_info_label = ttk.Label(binary_input_line_frame, text="Input length: N/A", font=("Calibri", 9))
+        # Place relative to binary_input_line_frame. Input widget's entry starts at x=150, width=900.
+        self.data_info_label.place(x=1060, y=0, height=25) 
 
-        # Batch testing UI
-        batch_testing_label = ttk.Label(input_label_frame, text="For batch testing (select files):", font=("Calibri", 10, "italic"))
-        batch_testing_label.place(x=10, y=60)
+        # --- String Data File Section ---
+        string_file_section = ttk.Frame(input_label_frame)
+        string_file_section.pack(side=TOP, fill=X, padx=10, pady=5, anchor='nw')
 
-        batch_management_frame = ttk.Frame(input_label_frame)
-        batch_management_frame.place(x=10, y=80, width=1240, height=160)
+        string_file_label = ttk.Label(string_file_section, text="For string data file (URL or text per line):", font=("Calibri", 10, "italic"))
+        string_file_label.pack(side=TOP, anchor='w', pady=(0,2))
+        
+        # Frame for the Input widget
+        string_input_line_frame = ttk.Frame(string_file_section)
+        string_input_line_frame.pack(side=TOP, fill=X)
+        self.__string_data_file_input = Input(string_input_line_frame, 'String Data File', 10, 0, True,
+                                              self.select_data_file, button_xcoor=1060, button_width=160)
 
-        # Listbox with Scrollbar
-        listbox_frame = ttk.Frame(batch_management_frame)
-        listbox_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+        # --- Batch Files Section ---
+        batch_files_section = ttk.Frame(input_label_frame)
+        batch_files_section.pack(side=TOP, fill=BOTH, expand=True, padx=10, pady=5, anchor='nw')
+        
+        batch_testing_label = ttk.Label(batch_files_section, text="For batch testing (binary files):", font=("Calibri", 10, "italic"))
+        batch_testing_label.pack(side=TOP, anchor='w', pady=(0,2))
+
+        # batch_management_frame was using place. Now it will be packed into batch_files_section.
+        # It needs to be a ttk.Frame if it wasn't already, for consistency.
+        # Assuming batch_management_frame was already a ttk.Frame or similar.
+        # If it was placed directly in input_label_frame, we re-master it here.
+        self.batch_management_frame = ttk.Frame(batch_files_section) # Ensure it's a new frame or re-mastered
+        self.batch_management_frame.pack(side=TOP, fill=BOTH, expand=True, pady=2)
+
+
+        # Listbox with Scrollbar (master is now self.batch_management_frame)
+        listbox_frame = ttk.Frame(self.batch_management_frame)
+        listbox_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=(0,5), pady=5) # Adjusted padx
 
         self.file_listbox_scrollbar = ttk.Scrollbar(listbox_frame, orient=VERTICAL)
         self.file_listbox = Listbox(listbox_frame, yscrollcommand=self.file_listbox_scrollbar.set, selectmode=EXTENDED, font=("Calibri", 10))
@@ -138,25 +168,27 @@ class Main(Frame):
         self.file_listbox_scrollbar.pack(side=RIGHT, fill=Y)
         self.file_listbox.pack(side=LEFT, fill=BOTH, expand=True)
 
-        # Buttons for Listbox management
-        batch_buttons_frame = ttk.Frame(batch_management_frame)
-        batch_buttons_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
+        # Buttons for Listbox management (master is now self.batch_management_frame)
+        batch_buttons_frame = ttk.Frame(self.batch_management_frame)
+        batch_buttons_frame.pack(side=LEFT, fill=Y, padx=(5,0), pady=5) # Adjusted padx
 
         add_files_button = ttk.Button(batch_buttons_frame, text="Add File(s)", command=self._add_files_to_batch)
-        add_files_button.pack(side=TOP, pady=5, fill=X)
+        add_files_button.pack(side=TOP, pady=2, fill=X) # Adjusted pady
 
         remove_file_button = ttk.Button(batch_buttons_frame, text="Remove Selected", command=self._remove_selected_file_from_batch)
-        remove_file_button.pack(side=TOP, pady=5, fill=X)
+        remove_file_button.pack(side=TOP, pady=2, fill=X) # Adjusted pady
         
-        # NOTE: self.__binary_data_file_input and self.__string_data_file_input are intentionally not created/placed
-        # to "remove" them from the UI as per requirements. Their associated methods 
-        # self.select_binary_file and self.select_data_file will become unused.
 
         # Setup LabelFrame for Randomness Test
-        # Adjusted y position due to increased height of input_label_frame
+        # Adjusted y position due to potential changes in input_label_frame height
+        # The exact y might need to be recalculated or dynamically determined.
+        # For now, assuming input_label_frame new height is around 200-220 after packing.
+        # Old y=285, input_label_frame old height=250. Difference = 35.
+        # If new input_label_frame height is ~220, then new y for _stest_selection_label_frame should be around 285 - (250-220) = 255
+        # This is an estimate; final adjustment might be needed after seeing the layout.
         self._stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self._stest_selection_label_frame.config(font=("Calibri", 14))
-        self._stest_selection_label_frame.place(x=20, y=285, width=1260, height=345) # y changed from 155 to 285, height reduced to fit
+        self._stest_selection_label_frame.place(x=20, y=290, width=1260, height=340) # Adjusted y and height
 
         test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 11, border=2,
                                    relief="groove")
@@ -288,22 +320,26 @@ class Main(Frame):
         """
         Called tkinter.askopenfilename to give user an interface to select the string input file and perform the following:
         1.  Clear Binary Data Input Field. (The textfield)
-        2.  Clear Binary Data File Input Field.
+        2.  Clear Batch File Listbox.
         3.  Set selected file name to String Data File Input Field.
 
         :return: None
         """
-        # This method is now effectively unused due to UI changes for batch processing.
-        print('Select Data File (method potentially unused)')
-        # Original logic:
-        # self.__file_name = askopenfilename(initialdir=os.getcwd(), title="Select Data File.")
-        # if self.__file_name:
-        #     self.__binary_input.set_data('')
-        #     # self.__binary_data_file_input.set_data('') # This UI element is removed
-        #     # self.__string_data_file_input.set_data(self.__file_name) # This UI element is removed
-        #     self.__is_binary_file = False
-        #     self.__is_data_file = True
-        pass # Pass for now as the UI element it primarily served is removed
+        print('Select Data File')
+        file_name = askopenfilename(initialdir=os.getcwd(), title="Select Data File (Text or URLs).")
+        if file_name:
+            self.__file_name = file_name # Store the selected file name for use in execute
+            self.__binary_input.set_data('') # Clear direct binary input
+            if hasattr(self, 'file_listbox'): # Clear batch file list
+                self.file_listbox.delete(0, END)
+            self._batch_file_paths = []
+            
+            self.__string_data_file_input.set_data(self.__file_name) # Display selected file path
+            
+            self.__is_data_file = True 
+            self.__is_binary_file = False # This indicates it's not a pre-processed binary file input
+            self.data_info_label.config(text="Input length: N/A (File selected)")
+
 
     def _add_files_to_batch(self):
         """
@@ -403,19 +439,52 @@ class Main(Frame):
 
         batch_files_from_listbox = list(self.file_listbox.get(0, END))
         direct_binary_input_data = self.__binary_input.get_data().strip()
-        
-        selected_test_indices = [i for i, test_item in enumerate(self._test) if test_item.get_check_box_value() == 1]
+        string_data_file_path = self.__string_data_file_input.get_data().strip() if hasattr(self, '_Main__string_data_file_input') else ""
+
+        selected_test_indices = self._get_selected_test_indices()
         if not selected_test_indices:
             messagebox.showwarning("Warning", "No tests selected. Please select at least one test.")
             return None
 
-        if batch_files_from_listbox:
+        if batch_files_from_listbox: # Priority 1: Batch files
             operation_mode = "batch"
             test_data_to_process = batch_files_from_listbox
-            # Validation for batch files will occur in _execute_tests_worker for each file.
             print(f"Starting batch mode with {len(test_data_to_process)} files.")
             status_message = f"Preparing for batch processing of {len(test_data_to_process)} files..."
-        elif direct_binary_input_data:
+        elif string_data_file_path: # Priority 2: String Data File
+            operation_mode = "single_string_file" # Distinct mode for clarity
+            print(f"Starting string data file mode with file: {string_data_file_path}")
+            status_message = f"Processing string data file: {os.path.basename(string_data_file_path)}..."
+            
+            processed_binary_data_list = []
+            try:
+                # Use self.__file_name which should be set by select_data_file
+                with open(self.__file_name, 'r') as handle: 
+                    for item in handle:
+                        item_stripped = item.strip()
+                        if not item_stripped: continue
+                        if item_stripped.startswith('http://') or item_stripped.startswith('https://'):
+                            url_content = Tools.url_to_binary(item_stripped)
+                            processed_binary_data_list.append(Tools.string_to_binary(url_content))
+                        else:
+                            processed_binary_data_list.append(Tools.string_to_binary(item_stripped))
+                
+                concatenated_binary_data = "".join(processed_binary_data_list)
+                if not concatenated_binary_data:
+                     messagebox.showwarning("Warning", f"String data file '{os.path.basename(string_data_file_path)}' resulted in empty binary data.")
+                     return None
+
+                data_len = len(concatenated_binary_data)
+                self.data_info_label.config(text=f"Input length: {data_len} bits (from string file)")
+                validation_result = self._validate_input_length(data_len, selected_test_indices)
+                if isinstance(validation_result, str):
+                    messagebox.showwarning("Input Data Warning", f"File: {os.path.basename(string_data_file_path)}\n{validation_result}")
+                    return None
+                test_data_to_process = concatenated_binary_data
+            except Exception as e:
+                messagebox.showerror("Error processing string data file", f"Could not process file {string_data_file_path}: {e}")
+                return None
+        elif direct_binary_input_data: # Priority 3: Direct Binary Input
             operation_mode = "single"
             if not all(c in '01' for c in direct_binary_input_data):
                 messagebox.showerror("Error", "Direct binary input contains non-binary characters ('0' or '1').")
@@ -423,7 +492,7 @@ class Main(Frame):
             
             data_len = len(direct_binary_input_data)
             validation_result = self._validate_input_length(data_len, selected_test_indices)
-            if isinstance(validation_result, str): # Validation failed, error message returned
+            if isinstance(validation_result, str): 
                 messagebox.showwarning("Input Data Warning", validation_result)
                 return None
                 
@@ -431,7 +500,7 @@ class Main(Frame):
             print(f"Starting single mode with direct binary input of length {data_len}.")
             status_message = "Preparing for single sequence processing..."
         else:
-            messagebox.showwarning("Warning", "No input data provided. Please type a binary sequence or add files for batch testing.")
+            messagebox.showwarning("Warning", "No input data provided. Please type a binary sequence, select a string data file, or add files for batch testing.")
             return None
 
         # Common setup for starting the test execution process
@@ -799,13 +868,14 @@ class Main(Frame):
         """
         print('Reset')
         self.__binary_input.set_data('')
-        # self.__binary_data_file_input.set_data('') # Element removed
-        # self.__string_data_file_input.set_data('') # Element removed
-        if hasattr(self, 'file_listbox'): # Clear the listbox
+        # self.__binary_data_file_input.set_data('') # This UI element was removed earlier
+        if hasattr(self, '_Main__string_data_file_input'): # Check if it exists before trying to set data
+             self.__string_data_file_input.set_data('')
+        if hasattr(self, 'file_listbox'): 
             self.file_listbox.delete(0, END)
         self._batch_file_paths = []
-        self.__is_binary_file = False # This flag might be less relevant now or needs re-evaluation
-        self.__is_data_file = False   # Same for this flag
+        self.__is_binary_file = False 
+        self.__is_data_file = False   
 
         # Resetting UI elements
         if hasattr(self, 'status_label'): # Check if status_label exists
@@ -860,7 +930,7 @@ if __name__ == '__main__':
     np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
-    root.geometry("%dx%d+0+0" % (1300, 700)) # Increased height for larger input frame and batch UI
+    root.geometry("%dx%d+0+0" % (1300, 700)) # Keep height at 700 for now, may need adjustment
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
     app = Main(root)
