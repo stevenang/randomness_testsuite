@@ -30,7 +30,7 @@ class CustomButton:
 
 class Input:
 
-    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, button_xcoor=1050, button_width=180, change_callback=None):
+    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, button_xcoor=1050, button_width=180):
         # Setup Labels
         label = ttk.Label(master, text=title, font=("Calibri", 12))
         label.place(x=x_coor, y=y_coor, height=25)
@@ -45,13 +45,6 @@ class Input:
             # Using ttk.Button for consistency
             button = ttk.Button(master, text=button_title, command=action)
             button.place(x=button_xcoor, y=y_coor, width=180, height=25)
-        
-        if change_callback:
-            # Wrapper to call the provided callback.
-            # The trace_add method passes three arguments (name, index, mode), which we can ignore.
-            def callback_wrapper(*args):
-                change_callback() # Call the provided callback without arguments
-            self.__data.trace_add('write', callback_wrapper)
 
     def set_data(self, value):
         self.__data.set(value)

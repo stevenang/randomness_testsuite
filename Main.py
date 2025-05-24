@@ -2,7 +2,7 @@ import os
 import threading
 import numpy as np
 from tkinter import *
-from tkinter.filedialog import askopenfilename, askopenfilenames # Added askopenfilenames
+from tkinter.filedialog import askopenfilename # Removed askopenfilenames
 from tkinter.filedialog import asksaveasfile
 from tkinter import messagebox
 import queue
@@ -77,118 +77,33 @@ class Main(Frame):
 
         self._test_result = []
         self._test_string = []
-        self._latest_results = [] # Stores results of the last successfully processed file or single run
+        self._latest_results = [] 
         self._ui_queue = queue.Queue()
-        self._batch_file_paths = [] 
-        self._current_processing_mode = None # 'single' or 'batch'
-
-        # Minimum data lengths for tests (index: min_length_in_bits)
-        # These are placeholders and should be verified against NIST documentation.
-        self._test_min_lengths = {
-            0: 100,  # Frequency (Monobit) Test
-            1: 100,  # Frequency Test within a Block (e.g., m=20, N=5. Actual: M*N, M>=20)
-            2: 100,  # Runs Test
-            3: 128,  # Test for the Longest Run of Ones in a Block
-            4: 1000, # Binary Matrix Rank Test (e.g. 38*M*Q, for M=Q=32 -> ~38k. Placeholder for now)
-            5: 1000, # Discrete Fourier Transform (Spectral) Test
-            6: 100,  # Non-overlapping Template Matching Test (depends on template length m and N)
-            7: 1000, # Overlapping Template Matching Test (depends on template length m and N)
-            8: 100000,# Maurer's "Universal Statistical" Test (e.g. L*Q+K, L=7,Q=1280,K=~7e5. Placeholder.)
-            9: 1000, # Linear Complexity Test
-            10: 500, # Serial Test (depends on block length m)
-            11: 500, # Approximate Entropy Test (depends on block length m)
-            12: 100, # Cumulative Sums Test (Forward)
-            13: 100, # Cumulative Sums Test (Backward)
-            14: 1000000, # Random Excursions Test (requires many cycles)
-            15: 1000000  # Random Excursions Variant Test (requires many cycles)
-        }
+        self.__is_binary_file = False # Restored
+        self.__is_data_file = False   # Restored
+        self.__file_name = ""         # Restored for select_binary/data_file
 
     def init_window(self):
         frame_title = 'A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications'
-        title_label = LabelTag(self.master, frame_title, 0, 5, 1260) # Assuming LabelTag uses ttk.Label now
+        title_label = LabelTag(self.master, frame_title, 0, 5, 1260)
 
-        # Setup LabelFrame for Input
+        # Setup LabelFrame for Input - Reverted to original fixed height
         input_label_frame = LabelFrame(self.master, text="Input Data") 
         input_label_frame.config(font=("Calibri", 14))
-        # input_label_frame.propagate(0) # Let it propagate for now with pack, or set specific height
-        input_label_frame.place(x=20, y=30, width=1260) # Removed fixed height, let pack manage it.
+        input_label_frame.propagate(0) # Prevent resizing by children
+        input_label_frame.place(x=20, y=30, width=1260, height=125) # Original height
 
-        # --- Direct Input Section ---
-        direct_input_section = ttk.Frame(input_label_frame)
-        direct_input_section.pack(side=TOP, fill=X, padx=10, pady=5, anchor='nw')
-
-        single_seq_label = ttk.Label(direct_input_section, text="For single sequence (type/paste):", font=("Calibri", 10, "italic"))
-        single_seq_label.pack(side=TOP, anchor='w', pady=(0,2)) # Small padding below label
-
-        # Frame to contain the Input widget and its info label using place relative to this frame
-        binary_input_line_frame = ttk.Frame(direct_input_section)
-        binary_input_line_frame.pack(side=TOP, fill=X)
-        # Input class uses place internally, x_coor and y_coor are relative to its master.
-        self.__binary_input = Input(binary_input_line_frame, 'Binary Data', 10, 0, change_callback=self._update_binary_input_info)
-        
-        self.data_info_label = ttk.Label(binary_input_line_frame, text="Input length: N/A", font=("Calibri", 9))
-        # Place relative to binary_input_line_frame. Input widget's entry starts at x=150, width=900.
-        self.data_info_label.place(x=1060, y=0, height=25) 
-
-        # --- String Data File Section ---
-        string_file_section = ttk.Frame(input_label_frame)
-        string_file_section.pack(side=TOP, fill=X, padx=10, pady=5, anchor='nw')
-
-        string_file_label = ttk.Label(string_file_section, text="For string data file (URL or text per line):", font=("Calibri", 10, "italic"))
-        string_file_label.pack(side=TOP, anchor='w', pady=(0,2))
-        
-        # Frame for the Input widget
-        string_input_line_frame = ttk.Frame(string_file_section)
-        string_input_line_frame.pack(side=TOP, fill=X)
-        self.__string_data_file_input = Input(string_input_line_frame, 'String Data File', 10, 0, True,
+        # Restore original Input widgets
+        self.__binary_input = Input(input_label_frame, 'Binary Data', 10, 5) 
+        self.__binary_data_file_input = Input(input_label_frame, 'Binary Data File', 10, 35, True, 
+                                              self.select_binary_file, button_xcoor=1060, button_width=160)
+        self.__string_data_file_input = Input(input_label_frame, 'String Data File', 10, 65, True,
                                               self.select_data_file, button_xcoor=1060, button_width=160)
-
-        # --- Batch Files Section ---
-        batch_files_section = ttk.Frame(input_label_frame)
-        batch_files_section.pack(side=TOP, fill=BOTH, expand=True, padx=10, pady=5, anchor='nw')
         
-        batch_testing_label = ttk.Label(batch_files_section, text="For batch testing (binary files):", font=("Calibri", 10, "italic"))
-        batch_testing_label.pack(side=TOP, anchor='w', pady=(0,2))
-
-        # batch_management_frame was using place. Now it will be packed into batch_files_section.
-        # It needs to be a ttk.Frame if it wasn't already, for consistency.
-        # Assuming batch_management_frame was already a ttk.Frame or similar.
-        # If it was placed directly in input_label_frame, we re-master it here.
-        self.batch_management_frame = ttk.Frame(batch_files_section) # Ensure it's a new frame or re-mastered
-        self.batch_management_frame.pack(side=TOP, fill=BOTH, expand=True, pady=2)
-
-
-        # Listbox with Scrollbar (master is now self.batch_management_frame)
-        listbox_frame = ttk.Frame(self.batch_management_frame)
-        listbox_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=(0,5), pady=5) # Adjusted padx
-
-        self.file_listbox_scrollbar = ttk.Scrollbar(listbox_frame, orient=VERTICAL)
-        self.file_listbox = Listbox(listbox_frame, yscrollcommand=self.file_listbox_scrollbar.set, selectmode=EXTENDED, font=("Calibri", 10))
-        self.file_listbox_scrollbar.config(command=self.file_listbox.yview)
-        self.file_listbox_scrollbar.pack(side=RIGHT, fill=Y)
-        self.file_listbox.pack(side=LEFT, fill=BOTH, expand=True)
-
-        # Buttons for Listbox management (master is now self.batch_management_frame)
-        batch_buttons_frame = ttk.Frame(self.batch_management_frame)
-        batch_buttons_frame.pack(side=LEFT, fill=Y, padx=(5,0), pady=5) # Adjusted padx
-
-        add_files_button = ttk.Button(batch_buttons_frame, text="Add File(s)", command=self._add_files_to_batch)
-        add_files_button.pack(side=TOP, pady=2, fill=X) # Adjusted pady
-
-        remove_file_button = ttk.Button(batch_buttons_frame, text="Remove Selected", command=self._remove_selected_file_from_batch)
-        remove_file_button.pack(side=TOP, pady=2, fill=X) # Adjusted pady
-        
-
-        # Setup LabelFrame for Randomness Test
-        # Adjusted y position due to potential changes in input_label_frame height
-        # The exact y might need to be recalculated or dynamically determined.
-        # For now, assuming input_label_frame new height is around 200-220 after packing.
-        # Old y=285, input_label_frame old height=250. Difference = 35.
-        # If new input_label_frame height is ~220, then new y for _stest_selection_label_frame should be around 285 - (250-220) = 255
-        # This is an estimate; final adjustment might be needed after seeing the layout.
+        # Setup LabelFrame for Randomness Test - y position reverted
         self._stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self._stest_selection_label_frame.config(font=("Calibri", 14))
-        self._stest_selection_label_frame.place(x=20, y=290, width=1260, height=340) # Adjusted y and height
+        self._stest_selection_label_frame.place(x=20, y=155, width=1260, height=450) # Original y and height
 
         test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 11, border=2,
                                    relief="groove")
@@ -303,108 +218,32 @@ class Main(Frame):
 
         :return: None
         """
-        # This method is now effectively unused due to UI changes for batch processing.
-        # Kept for potential future single binary file selection if UI is re-added.
-        print('Select Binary File (method potentially unused)')
-        # Original logic:
-        # self.__file_name = askopenfilename(initialdir=os.getcwd(), title="Select Binary Input File.")
-        # if self.__file_name:
-        #     self.__binary_input.set_data('')
-        #     # self.__binary_data_file_input.set_data(self.__file_name) # This UI element is removed
-        #     # self.__string_data_file_input.set_data('') # This UI element is removed
-        #     self.__is_binary_file = True
-        #     self.__is_data_file = False
-        pass # Pass for now as the UI element it primarily served is removed
+        print('Select Binary File')
+        self.__file_name = askopenfilename(initialdir=os.getcwd(), title="Select Binary Input File.")
+        if self.__file_name:
+            self.__binary_input.set_data('')
+            self.__binary_data_file_input.set_data(self.__file_name)
+            self.__string_data_file_input.set_data('')
+            self.__is_binary_file = True
+            self.__is_data_file = False
 
     def select_data_file(self):
         """
         Called tkinter.askopenfilename to give user an interface to select the string input file and perform the following:
         1.  Clear Binary Data Input Field. (The textfield)
-        2.  Clear Batch File Listbox.
+        2.  Clear Binary Data File Input Field.
         3.  Set selected file name to String Data File Input Field.
 
         :return: None
         """
         print('Select Data File')
-        file_name = askopenfilename(initialdir=os.getcwd(), title="Select Data File (Text or URLs).")
-        if file_name:
-            self.__file_name = file_name # Store the selected file name for use in execute
-            self.__binary_input.set_data('') # Clear direct binary input
-            if hasattr(self, 'file_listbox'): # Clear batch file list
-                self.file_listbox.delete(0, END)
-            self._batch_file_paths = []
-            
-            self.__string_data_file_input.set_data(self.__file_name) # Display selected file path
-            
-            self.__is_data_file = True 
-            self.__is_binary_file = False # This indicates it's not a pre-processed binary file input
-            self.data_info_label.config(text="Input length: N/A (File selected)")
-
-
-    def _add_files_to_batch(self):
-        """
-        Opens a dialog to select multiple binary files and adds them to the listbox.
-        """
-        # Using askopenfilenames to select multiple files
-        filepaths = askopenfilenames(
-            title="Select Binary Files for Batch",
-            filetypes=[("All files", "*.*")] # Or more specific like [("Binary files", "*.bin"), ("Text files", "*.txt")]
-        )
-        if filepaths:
-            current_items = self.file_listbox.get(0, END)
-            for filepath in filepaths:
-                if filepath not in current_items: # Add only if not already in the list
-                    self.file_listbox.insert(END, filepath)
-            # Update self._batch_file_paths if it's meant to be a separate synchronized list
-            self._batch_file_paths = list(self.file_listbox.get(0, END))
-
-
-    def _remove_selected_file_from_batch(self):
-        """
-        Removes selected files from the listbox.
-        """
-        selected_indices = self.file_listbox.curselection()
-        # Remove items in reverse order of index to avoid issues with changing indices
-        for index in reversed(selected_indices):
-            self.file_listbox.delete(index)
-        # Update self._batch_file_paths if it's meant to be a separate synchronized list
-        self._batch_file_paths = list(self.file_listbox.get(0, END))
-
-    def _get_selected_test_indices(self):
-        """Helper method to get the indices of currently selected tests."""
-        return [i for i, test_item in enumerate(self._test) if test_item.get_check_box_value() == 1]
-
-    def _update_binary_input_info(self, *args): # Added *args to accept trace callback arguments
-        """
-        Updates the data_info_label with the length of the direct binary input.
-        Called by the trace on self.__binary_input's StringVar.
-        """
-        current_data = self.__binary_input.get_data()
-        length = len(current_data)
-        
-        if hasattr(self, 'data_info_label'):
-            if length == 0:
-                self.data_info_label.config(text="Input length: N/A")
-            else:
-                self.data_info_label.config(text=f"Input length: {length} bits")
-        # Optional: Non-modal validation feedback here (deferred for now)
-
-    def _validate_input_length(self, data_length, selected_test_indices):
-        """
-        Validates if the input data length is sufficient for the selected tests.
-        Returns True if valid, or an error message string if not.
-        """
-        warnings = []
-        for index in selected_test_indices:
-            test_name = self._test_type[index]
-            min_length = self._test_min_lengths.get(index, 0) # Default to 0 if not found
-            
-            if data_length < min_length:
-                warnings.append(f"- {test_name.split('. ')[1]}: needs {min_length} bits, got {data_length} bits.")
-        
-        if warnings:
-            return "Input data is too short for the following selected tests:\n" + "\n".join(warnings)
-        return True
+        self.__file_name = askopenfilename(initialdir=os.getcwd(), title="Select Data File.")
+        if self.__file_name:
+            self.__binary_input.set_data('')
+            self.__binary_data_file_input.set_data('')
+            self.__string_data_file_input.set_data(self.__file_name)
+            self.__is_binary_file = False
+            self.__is_data_file = True
 
     def select_all(self):
         """
@@ -433,33 +272,46 @@ class Main(Frame):
         :return: None
         """
         print('Execute')
-        
-        test_data_to_process = None
-        operation_mode = "" # "single" or "batch"
 
-        batch_files_from_listbox = list(self.file_listbox.get(0, END))
-        direct_binary_input_data = self.__binary_input.get_data().strip()
-        string_data_file_path = self.__string_data_file_input.get_data().strip() if hasattr(self, '_Main__string_data_file_input') else ""
-
-        selected_test_indices = self._get_selected_test_indices()
-        if not selected_test_indices:
-            messagebox.showwarning("Warning", "No tests selected. Please select at least one test.")
+        # Input validation and data preparation (reverted logic)
+        if len(self.__binary_input.get_data().strip().rstrip()) == 0 and \
+           len(self.__binary_data_file_input.get_data().strip().rstrip()) == 0 and \
+           len(self.__string_data_file_input.get_data().strip().rstrip()) == 0:
+            messagebox.showwarning("Warning", 'You must input the binary data or read the data from from the file.')
+            return None
+        elif (len(self.__binary_input.get_data().strip().rstrip()) > 0 and \
+              (len(self.__binary_data_file_input.get_data().strip().rstrip()) > 0 or \
+               len(self.__string_data_file_input.get_data().strip().rstrip()) > 0)) or \
+             (len(self.__binary_data_file_input.get_data().strip().rstrip()) > 0 and \
+              len(self.__string_data_file_input.get_data().strip().rstrip()) > 0):
+            messagebox.showwarning("Warning", 'You can only use one input method at a time: direct binary, binary data file, or string data file.')
             return None
 
-        if batch_files_from_listbox: # Priority 1: Batch files
-            operation_mode = "batch"
-            test_data_to_process = batch_files_from_listbox
-            print(f"Starting batch mode with {len(test_data_to_process)} files.")
-            status_message = f"Preparing for batch processing of {len(test_data_to_process)} files..."
-        elif string_data_file_path: # Priority 2: String Data File
-            operation_mode = "single_string_file" # Distinct mode for clarity
-            print(f"Starting string data file mode with file: {string_data_file_path}")
-            status_message = f"Processing string data file: {os.path.basename(string_data_file_path)}..."
-            
+        input_data_sequences = [] # Will hold the single binary string to test
+
+        if not len(self.__binary_input.get_data()) == 0:
+            input_data_sequences.append(self.__binary_input.get_data().strip())
+            status_message = "Processing direct binary input..."
+        elif self.__is_binary_file and self.__file_name: # Binary Data File
+            try:
+                with open(self.__file_name, 'r') as handle:
+                    temp = [data.strip().rstrip() for data in handle]
+                test_data = ''.join(temp)[:1000000]
+                if not all(c in '01' for c in test_data):
+                     messagebox.showerror("Error", f"File {self.__file_name} contains non-binary characters.")
+                     return None
+                if not test_data:
+                    messagebox.showwarning("Warning", f"Binary data file '{os.path.basename(self.__file_name)}' is empty or resulted in empty data.")
+                    return None
+                input_data_sequences.append(test_data)
+                status_message = f"Processing binary data file: {os.path.basename(self.__file_name)}..."
+            except Exception as e:
+                messagebox.showerror("Error reading binary data file", f"Could not read file {self.__file_name}: {e}")
+                return None
+        elif self.__is_data_file and self.__file_name: # String Data File
             processed_binary_data_list = []
             try:
-                # Use self.__file_name which should be set by select_data_file
-                with open(self.__file_name, 'r') as handle: 
+                with open(self.__file_name, 'r') as handle:
                     for item in handle:
                         item_stripped = item.strip()
                         if not item_stripped: continue
@@ -468,45 +320,36 @@ class Main(Frame):
                             processed_binary_data_list.append(Tools.string_to_binary(url_content))
                         else:
                             processed_binary_data_list.append(Tools.string_to_binary(item_stripped))
-                
-                concatenated_binary_data = "".join(processed_binary_data_list)
-                if not concatenated_binary_data:
-                     messagebox.showwarning("Warning", f"String data file '{os.path.basename(string_data_file_path)}' resulted in empty binary data.")
+                test_data = "".join(processed_binary_data_list)
+                if not test_data:
+                     messagebox.showwarning("Warning", f"String data file '{os.path.basename(self.__file_name)}' resulted in empty binary data.")
                      return None
-
-                data_len = len(concatenated_binary_data)
-                self.data_info_label.config(text=f"Input length: {data_len} bits (from string file)")
-                validation_result = self._validate_input_length(data_len, selected_test_indices)
-                if isinstance(validation_result, str):
-                    messagebox.showwarning("Input Data Warning", f"File: {os.path.basename(string_data_file_path)}\n{validation_result}")
-                    return None
-                test_data_to_process = concatenated_binary_data
+                # Basic validation for binary string (already done by Tools.string_to_binary generally)
+                input_data_sequences.append(test_data)
+                status_message = f"Processing string data file: {os.path.basename(self.__file_name)}..."
             except Exception as e:
-                messagebox.showerror("Error processing string data file", f"Could not process file {string_data_file_path}: {e}")
+                messagebox.showerror("Error processing string data file", f"Could not process file {self.__file_name}: {e}")
                 return None
-        elif direct_binary_input_data: # Priority 3: Direct Binary Input
-            operation_mode = "single"
-            if not all(c in '01' for c in direct_binary_input_data):
-                messagebox.showerror("Error", "Direct binary input contains non-binary characters ('0' or '1').")
-                return None
-            
-            data_len = len(direct_binary_input_data)
-            validation_result = self._validate_input_length(data_len, selected_test_indices)
-            if isinstance(validation_result, str): 
-                messagebox.showwarning("Input Data Warning", validation_result)
-                return None
-                
-            test_data_to_process = direct_binary_input_data
-            print(f"Starting single mode with direct binary input of length {data_len}.")
-            status_message = "Preparing for single sequence processing..."
-        else:
-            messagebox.showwarning("Warning", "No input data provided. Please type a binary sequence, select a string data file, or add files for batch testing.")
-            return None
+        
+        if not input_data_sequences or not input_data_sequences[0]:
+             messagebox.showwarning("Warning", "Input data is empty or could not be processed.")
+             return None
 
-        # Common setup for starting the test execution process
+        test_data_to_process = input_data_sequences[0] # Worker expects a single string
+
+        # Length validation (re-add if needed, using self._test_min_lengths)
+        # selected_test_indices = self._get_selected_test_indices() # This method was removed, need to inline or re-add
+        # if not selected_test_indices:
+        #     messagebox.showwarning("Warning", "No tests selected.")
+        #     return None
+        # validation_result = self._validate_input_length(len(test_data_to_process), selected_test_indices)
+        # if isinstance(validation_result, str):
+        #     messagebox.showwarning("Input Data Warning", validation_result)
+        #     return None
+
         try:
-            self.execute_button.config(state=DISABLED)
-            self.status_label.config(text=status_message)
+            self.execute_button.config(state=DISABLED) # This should use the CustomButton's config
+            self.status_label.config(text=status_message) # Use the status_message set above
             self.progress_bar['value'] = 0
             self.progress_bar['maximum'] = 100 # Default max, will be updated by 'start' msg from worker
 
@@ -525,26 +368,26 @@ class Main(Frame):
         """
         Worker method to execute randomness tests in a separate thread.
         Stores results in self._latest_results and appends to self._test_result (for single runs).
-        Handles batch processing by iterating through files.
+        Handles batch processing by iterating through files. (Reverted: only single string input)
         """
-        selected_test_indices = self._get_selected_test_indices() # Get once
-        num_selected_tests = len(selected_test_indices)
+        # Reverted: This worker now only processes a single string.
+        # selected_test_indices = self._get_selected_test_indices() # This method is removed
+        # num_selected_tests = len(selected_test_indices)
+        
+        num_selected_tests = sum(1 for item in self._test if item.get_check_box_value() == 1)
 
-        if num_selected_tests == 0: # This check is also in execute(), but good to have in worker too.
+        if num_selected_tests == 0:
             self._ui_queue.put({'type': 'error', 'message': 'No tests selected.'})
             return
-
-        if isinstance(test_data_input, str): # Single mode
-            self._current_processing_mode = 'single'
-            # Length validation for single mode is done in execute() before starting the worker
-            self._ui_queue.put({'type': 'start', 
-                                'total_tests': num_selected_tests, 
-                                'mode': 'single'})
-            try:
-                current_run_results = [() for _ in range(len(self._test_type))]
-                completed_count = 0
-                for test_idx in selected_test_indices: # Iterate only over selected tests
-                    if test_idx == 13: # Cumulative Sums Test (Backward)
+        
+        self._ui_queue.put({'type': 'start', 'total_tests': num_selected_tests}) # Removed mode
+        try:
+            current_run_results = [() for _ in range(len(self._test_type))]
+            completed_count = 0
+            test_idx = 0 # Reverted from iterating selected_test_indices
+            for item in self._test: # Reverted
+                if item.get_check_box_value() == 1:
+                    if test_idx == 13: 
                         current_run_results[test_idx] = self.__test_function[test_idx](test_data_input, mode=1)
                     else:
                         current_run_results[test_idx] = self.__test_function[test_idx](test_data_input)
@@ -553,79 +396,17 @@ class Main(Frame):
                         'type': 'progress',
                         'test_name': self._test_type[test_idx],
                         'completed_tests': completed_count,
-                        'total_tests_in_current_run': num_selected_tests
+                        'total_tests_in_current_run': num_selected_tests 
                     })
-                
-                self._latest_results = current_run_results
-                self._test_result.insert(0, self._latest_results) 
-                self._ui_queue.put({'type': 'complete', 'results': self._latest_results, 'mode': 'single'})
-                print("Single test run completed in worker. Results sent to UI queue.")
-            except Exception as e:
-                print(f"Error in worker thread (single mode): {e}")
-                self._ui_queue.put({'type': 'error', 'message': str(e)})
-
-        elif isinstance(test_data_input, list): # Batch mode
-            self._current_processing_mode = 'batch'
-            total_files = len(test_data_input)
-            files_processed_successfully = 0
-            files_skipped_due_to_error = 0 # Includes read errors and validation errors
-
-            self._ui_queue.put({'type': 'start', 'total_files': total_files, 'mode': 'batch'})
+                test_idx += 1
             
-            for file_index, file_path in enumerate(test_data_input):
-                try:
-                    with open(file_path, 'r') as f:
-                        file_data = f.read().strip().replace('\n', '').replace(' ', '')[:1000000]
-                    
-                    if not all(c in '01' for c in file_data):
-                        self._ui_queue.put({'type': 'file_error', 'file_path': file_path, 'error': 'Contains non-binary characters.'})
-                        files_skipped_due_to_error += 1
-                        continue 
-                    if not file_data:
-                        self._ui_queue.put({'type': 'file_error', 'file_path': file_path, 'error': 'File is empty or contains only whitespace.'})
-                        files_skipped_due_to_error += 1
-                        continue
-
-                    # Validate data length for the current file
-                    file_data_length = len(file_data)
-                    validation_result = self._validate_input_length(file_data_length, selected_test_indices)
-                    if isinstance(validation_result, str): # Validation failed
-                        self._ui_queue.put({'type': 'validation_error', 
-                                           'file_path': file_path, 
-                                           'message': validation_result})
-                        files_skipped_due_to_error += 1
-                        continue
-
-                    current_file_results = [() for _ in range(len(self._test_type))]
-                    for test_idx in selected_test_indices:
-                        if test_idx == 13:
-                            current_file_results[test_idx] = self.__test_function[test_idx](file_data, mode=1)
-                        else:
-                            current_file_results[test_idx] = self.__test_function[test_idx](file_data)
-                    
-                    self._latest_results = current_file_results
-                    self._ui_queue.put({
-                        'type': 'save_report',
-                        'original_file_path': file_path,
-                        'results': current_file_results,
-                        'file_index': file_index + 1, # For progress bar (1-based)
-                        'total_files': total_files
-                    })
-                    files_processed_successfully += 1
-                except FileNotFoundError:
-                    self._ui_queue.put({'type': 'file_error', 'file_path': file_path, 'error': 'File not found.'})
-                    files_skipped_due_to_error += 1
-                except Exception as e: # Other read errors or unexpected issues
-                    self._ui_queue.put({'type': 'file_error', 'file_path': file_path, 'error': str(e)})
-                    files_skipped_due_to_error += 1
-            
-            self._ui_queue.put({'type': 'batch_complete', 
-                                'total_files_processed': files_processed_successfully, 
-                                'total_files_skipped': files_skipped_due_to_error}) # Use the new counter
-            print("Batch processing completed in worker. Summary sent to UI queue.")
-        else:
-            self._ui_queue.put({'type': 'error', 'message': 'Invalid input type to worker.'})
-
+            self._latest_results = current_run_results
+            self._test_result.insert(0, self._latest_results) 
+            self._ui_queue.put({'type': 'complete', 'results': self._latest_results}) # Removed mode
+            print("Test run completed in worker. Results sent to UI queue.")
+        except Exception as e:
+            print(f"Error in worker thread: {e}")
+            self._ui_queue.put({'type': 'error', 'message': str(e)})
 
     def _process_ui_queue(self):
         """
@@ -636,72 +417,25 @@ class Main(Frame):
                 msg = self._ui_queue.get_nowait()
 
                 if msg['type'] == 'start':
-                    self._current_processing_mode = msg.get('mode', 'single') # default to single if not specified
-                    if self._current_processing_mode == 'batch':
-                        self.progress_bar['maximum'] = msg['total_files'] if msg.get('total_files', 0) > 0 else 100
-                        self.progress_bar['value'] = 0
-                        self.status_label.config(text=f"Batch processing started for {msg['total_files']} files.")
-                        self.write_results([]) # Clear previous results from GUI
-                    else: # single mode
-                        self.progress_bar['maximum'] = msg['total_tests'] if msg.get('total_tests', 0) > 0 else 100
-                        self.progress_bar['value'] = 0
-                        self.status_label.config(text=f"Single test run started. Total selected tests: {msg['total_tests']}.")
-                        self.write_results([]) # Clear previous results from GUI
+                    # Removed mode handling, progress bar max is always total_tests
+                    self.progress_bar['maximum'] = msg['total_tests'] if msg.get('total_tests', 0) > 0 else 100
+                    self.progress_bar['value'] = 0
+                    self.status_label.config(text=f"Test run started. Total selected tests: {msg['total_tests']}.")
+                    self.write_results([]) 
                 
-                elif msg['type'] == 'progress': # This is for tests within a single run
-                    if self._current_processing_mode == 'single':
-                        self.progress_bar['value'] = msg['completed_tests']
-                        self.status_label.config(text=f"Running test {msg['completed_tests']}/{msg['total_tests_in_current_run']}: {msg['test_name']}...")
-                    # In batch mode, detailed per-test progress is currently suppressed for simplicity.
-                    # The main progress bar reflects file processing progress via 'save_report'.
+                elif msg['type'] == 'progress': 
+                    self.progress_bar['value'] = msg['completed_tests']
+                    self.status_label.config(text=f"Running test {msg['completed_tests']}/{msg['total_tests_in_current_run']}: {msg['test_name']}...")
                 
-                elif msg['type'] == 'validation_error':
-                    self.status_label.config(text=f"Skipping {os.path.basename(msg['file_path'])}: Data length insufficient.")
-                    # Optionally, could show full message in a non-modal way or log it.
-                    # messagebox.showwarning("Validation Error", f"Skipping file {msg['file_path']}:\n{msg['message']}") # This would be modal
-
-                elif msg['type'] == 'file_error':
-                    # Update status but don't stop batch or re-enable button yet
-                    self.status_label.config(text=f"Error processing file {os.path.basename(msg['file_path'])}: {msg['error']}")
-                    # Optionally, log this error more permanently
-
-                elif msg['type'] == 'save_report':
-                    base_name = os.path.splitext(os.path.basename(msg['original_file_path']))[0]
-                    output_filename = f"{base_name}_report.txt" 
-                    # Ensure output_filename is a full path if needed, e.g., in a specific reports directory
-                    # For now, it saves in the current working directory.
-                    
-                    file_info_string = f"Test Data File: {msg['original_file_path']}"
-                    try:
-                        self.save_result_to_file(output_filename, msg['results'], file_info_string)
-                        status_text = f"Report for {os.path.basename(msg['original_file_path'])} saved. ({msg['file_index']}/{msg['total_files']})"
-                        self.write_results(msg['results']) # Update GUI with results of this file
-                    except Exception as e:
-                        status_text = f"Error saving report for {os.path.basename(msg['original_file_path'])}: {e}"
-                    
-                    self.status_label.config(text=status_text)
-                    self.progress_bar['value'] = msg['file_index']
-
-                elif msg['type'] == 'complete' and msg.get('mode') == 'single': # Single run complete
-                    self.status_label.config(text="Single test run completed successfully.")
-                    self.write_results(msg['results']) # Display results of the single run
+                elif msg['type'] == 'complete': # Reverted: only one type of complete
+                    self.status_label.config(text="Test run completed successfully.")
+                    self.write_results(msg['results']) 
                     messagebox.showinfo("Execute", "Test Run Complete.")
                     self.progress_bar['value'] = 0 
                     self.execute_button.config(state=NORMAL)
-                    self._current_processing_mode = None
                     return 
                 
-                elif msg['type'] == 'batch_complete':
-                    skipped_info = f" ({msg['total_files_skipped']} skipped)" if msg['total_files_skipped'] > 0 else ""
-                    final_message = f"Batch processing finished. Processed: {msg['total_files_processed']}{skipped_info}."
-                    self.status_label.config(text=final_message)
-                    messagebox.showinfo("Batch Execute", final_message)
-                    self.progress_bar['value'] = 0 
-                    self.execute_button.config(state=NORMAL)
-                    self._current_processing_mode = None
-                    return
-
-                elif msg['type'] == 'error': # General error from worker or no tests selected
+                elif msg['type'] == 'error': 
                     self.status_label.config(text=f"Error: {msg['message']}")
                     messagebox.showerror("Error", msg['message'])
                     self.progress_bar['value'] = 0 
@@ -762,94 +496,81 @@ class Main(Frame):
 
             count += 1
 
-    def save_result_to_file(self, output_filename, results_to_save, original_file_info_string):
-        """
-        Saves the test results to a specified file.
-        :param output_filename: The name of the file to save the results to.
-        :param results_to_save: The test results data.
-        :param original_file_info_string: A string describing the source of the data (e.g., file path or "Direct Input").
-        """
-        print(f'Saving results to File: {output_filename}')
+    def save_result_to_file(self): # Reverted signature
+        print('Save to File')
+        if not self._test_result: # Check if there are any results to save
+            messagebox.showwarning("Save Warning", "No test results available to save.")
+            return
+
+        results_to_save = self._test_result[0] # Get the latest results
+
+        # Determine original_file_info_string based on input method
+        original_file_info_string = "Test Data Source: Unknown"
+        if not len(self.__binary_input.get_data()) == 0:
+             original_file_info_string = 'Test Data (Direct Input):\n' + self.__binary_input.get_data()
+        elif self.__is_binary_file and self.__file_name:
+             original_file_info_string = 'Test Data File (Binary):\n' + self.__file_name
+        elif self.__is_data_file and self.__file_name:
+             original_file_info_string = 'Test Data File (String/URL):\n' + self.__file_name
+        
         try:
-            with open(output_filename, 'w') as output_file:
-                output_file.write(original_file_info_string + '\n\n\n')
-                output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-                
-                # Call the existing helper method to write detailed results
-                self._write_detailed_results_to_file(output_file, results_to_save)
-            print(f"File save to {output_filename} finished.")
-            # Messagebox.showinfo is handled by the queue processor for 'save_report' completion.
+            # Use asksaveasfile to prompt user for filename
+            output_file_obj = asksaveasfile(mode='w', defaultextension=".txt",
+                                        title="Save Test Report As",
+                                        filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+            if output_file_obj is None: # User cancelled
+                return
+
+            with output_file_obj: # Ensures file is closed automatically
+                output_file_obj.write(original_file_info_string + '\n\n\n')
+                output_file_obj.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+                self._write_detailed_results_to_file(output_file_obj, results_to_save)
+            
+            messagebox.showinfo("Save",  f"File save finished. Report saved to {output_file_obj.name}.")
         except Exception as e:
-            print(f"Error saving file {output_filename}: {e}")
-            # Optionally, inform the user via messagebox or status bar if saving fails critically
-            messagebox.showerror("Save Error", f"Could not save report to {output_filename}:\n{e}")
+            messagebox.showerror("Save Error", f"Could not save report: {e}")
 
 
-    def _write_detailed_results_to_file(self, output_file, result_data):
+    def _write_detailed_results_to_file(self, output_file, result_data): # Name kept, but logic is original
         """
         Helper method to write the detailed test results to an open file object.
-        This method was originally named write_result_to_file. Renamed for clarity.
-        :param output_file: The open file object to write to.
-        :param result_data: The results data for the tests.
         """
-        for test_idx in range(len(self._test_type)): # Iterate up to the number of known test types
+        for test_idx in range(len(self._test_type)): 
+            # Check if test was selected and results exist for this index
             if test_idx < len(result_data) and self._test[test_idx].get_check_box_value() == 1 and result_data[test_idx]:
                 current_result = result_data[test_idx]
-                if not current_result: # Skip if result is empty tuple or None
+                if not current_result: 
                     continue
 
-                if test_idx == 10: # Serial Test (typically has two sets of p-values/results)
-                    output_file.write(self._test_type[test_idx] + ':\n')
-                    if isinstance(current_result, list) and len(current_result) == 2 and \
-                       isinstance(current_result[0], tuple) and isinstance(current_result[1], tuple):
-                        # Expected format for Serial test: [(p_val1, res1), (p_val2, res2)]
-                        output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
-                        str(current_result[0][0]), self.get_result_string(current_result[0][1]))
-                        output_file.write(output)
-                        output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
-                        str(current_result[1][0]), self.get_result_string(current_result[1][1]))
-                        output_file.write(output)
-                    else:
-                        output_file.write("\t\t\t\t\t\t\t\t\t\t\t\t\tError: Unexpected result format for Serial Test.\n")
-
-                elif test_idx == 14: # Random Excursions Test
+                if test_idx == 10: 
+                    output_file.write(self._test_type[test_idx] + ':\n') # Original logic for Serial
+                    output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
+                    str(current_result[0][0]), self.get_result_string(current_result[0][1]))
+                    output_file.write(output)
+                    output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
+                    str(current_result[1][0]), self.get_result_string(current_result[1][1]))
+                    output_file.write(output)
+                elif test_idx == 14: # Original logic for Random Excursions
                     output_file.write(self._test_type[test_idx] + ':\n')
                     output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'Chi Squared', 'P-Value', 'Conclusion')
                     output_file.write(output)
-                    if isinstance(current_result, list): # Expect a list of tuples
-                        for item in current_result:
-                             if isinstance(item, tuple) and len(item) >= 5:
-                                output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
-                                str(item[0]), str(item[2]), str(item[3]), self.get_result_string(item[4]))
-                                output_file.write(output)
-                             else:
-                                output_file.write(f"\t\t\t\tError: Unexpected item format in Random Excursions Test: {item}\n")
-                    else:
-                        output_file.write("\t\t\t\tError: Unexpected result format for Random Excursions Test.\n")
-                
-                elif test_idx == 15: # Random Excursions Variant Test
+                    for item in current_result:
+                        output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
+                        item[0], item[2], item[3], self.get_result_string(item[4]))
+                        output_file.write(output)
+                elif test_idx == 15: # Original logic for Random Excursions Variant
                     output_file.write(self._test_type[test_idx] + ':\n')
                     output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'COUNTS', 'P-Value', 'Conclusion')
                     output_file.write(output)
-                    if isinstance(current_result, list): # Expect a list of tuples
-                        for item in current_result:
-                            if isinstance(item, tuple) and len(item) >= 5:
-                                output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
-                                str(item[0]), str(item[2]), str(item[3]), self.get_result_string(item[4]))
-                                output_file.write(output)
-                            else:
-                                output_file.write(f"\t\t\t\tError: Unexpected item format in Random Excursions Variant Test: {item}\n")
-                    else:
-                        output_file.write("\t\t\t\tError: Unexpected result format for Random Excursions Variant Test.\n")
-
-                else: # For most other tests
-                    if isinstance(current_result, tuple) and len(current_result) >= 2:
-                        output = '%-50s\t%-20s\t%s\n' % (
-                        self._test_type[test_idx], str(current_result[0]), self.get_result_string(current_result[1]))
+                    for item in current_result:
+                        output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
+                        item[0], item[2], item[3], self.get_result_string(item[4]))
                         output_file.write(output)
-                    else:
-                         output_file.write(f"{self._test_type[test_idx]}\tError: Unexpected result format.\n")
-            elif self._test[test_idx].get_check_box_value() == 1: # Test was selected but result is missing/empty
+                else: # Original logic for other tests
+                    output = '%-50s\t%-20s\t%s\n' % (
+                    self._test_type[test_idx], str(current_result[0]), self.get_result_string(current_result[1]))
+                    output_file.write(output)
+            elif self._test[test_idx].get_check_box_value() == 1: 
                  output_file.write(f"{self._test_type[test_idx]}\t-\tTest selected but no result data.\n")
 
 
@@ -868,22 +589,18 @@ class Main(Frame):
         """
         print('Reset')
         self.__binary_input.set_data('')
-        # self.__binary_data_file_input.set_data('') # This UI element was removed earlier
-        if hasattr(self, '_Main__string_data_file_input'): # Check if it exists before trying to set data
-             self.__string_data_file_input.set_data('')
-        if hasattr(self, 'file_listbox'): 
-            self.file_listbox.delete(0, END)
-        self._batch_file_paths = []
+        self.__binary_data_file_input.set_data('') # Restored
+        self.__string_data_file_input.set_data('') # Restored
+
         self.__is_binary_file = False 
         self.__is_data_file = False   
 
         # Resetting UI elements
-        if hasattr(self, 'status_label'): # Check if status_label exists
+        if hasattr(self, 'status_label'): 
             self.status_label.config(text="")
-        if hasattr(self, 'progress_bar'): # Check if progress_bar exists
+        if hasattr(self, 'progress_bar'): 
             self.progress_bar['value'] = 0
-        if hasattr(self, 'data_info_label'): # Reset data info label
-            self.data_info_label.config(text="Input length: N/A")
+        # Removed data_info_label reset as it's being removed
             
         self._monobit.reset()
         self._block.reset()
@@ -930,7 +647,7 @@ if __name__ == '__main__':
     np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
-    root.geometry("%dx%d+0+0" % (1300, 700)) # Keep height at 700 for now, may need adjustment
+    root.geometry("%dx%d+0+0" % (1300, 650)) # Reverted window height
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
     app = Main(root)
