@@ -13,8 +13,20 @@ class CustomButton:
         # ttk.Button does not have a config method for font in the same way.
         # Style objects are preferred for ttk widgets. For simplicity here, let's assume default font or
         # handle styling at a higher level if necessary (e.g. via ttk.Style).
-        button = ttk.Button(master, text=title, command=action)
-        button.place(x=x_coor, y=y_coor, width=width, height=25)
+        self.button = ttk.Button(master, text=title, command=action)
+        self.button.place(x=x_coor, y=y_coor, width=width, height=25)
+
+    def config(self, **kwargs):
+        if 'state' in kwargs:
+            button_state = kwargs.pop('state')
+            if button_state == 'disabled' or button_state == DISABLED:
+                self.button.state(['disabled'])
+            elif button_state == 'normal':
+                self.button.state(['!disabled'])
+        
+        # Pass any other configuration options to the underlying ttk.Button
+        if kwargs:
+            self.button.configure(**kwargs)
 
 class Input:
 
