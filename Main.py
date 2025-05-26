@@ -1,9 +1,12 @@
 import os
+import threading
 import numpy as np
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename # Removed askopenfilenames
 from tkinter.filedialog import asksaveasfile
 from tkinter import messagebox
+import queue
+from tkinter import ttk
 
 from GUI import CustomButton
 from GUI import Input
@@ -74,25 +77,33 @@ class Main(Frame):
 
         self._test_result = []
         self._test_string = []
+        self._latest_results = [] 
+        self._ui_queue = queue.Queue()
+        self.__is_binary_file = False # Restored
+        self.__is_data_file = False   # Restored
+        self.__file_name = ""         # Restored for select_binary/data_file
 
     def init_window(self):
         frame_title = 'A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications'
         title_label = LabelTag(self.master, frame_title, 0, 5, 1260)
-        # Setup LabelFrame for Input
-        input_label_frame = LabelFrame(self.master, text="Input Data")
+
+        # Setup LabelFrame for Input - Reverted to original fixed height
+        input_label_frame = LabelFrame(self.master, text="Input Data") 
         input_label_frame.config(font=("Calibri", 14))
-        input_label_frame.propagate(0)
-        input_label_frame.place(x=20, y=30, width=1260, height=125)
-        self.__binary_input = Input(input_label_frame, 'Binary Data', 10, 5)
-        self.__binary_data_file_input = Input(input_label_frame, 'Binary Data File', 10, 35, True,
+        input_label_frame.propagate(0) # Prevent resizing by children
+        input_label_frame.place(x=20, y=30, width=1260, height=125) # Original height
+
+        # Restore original Input widgets
+        self.__binary_input = Input(input_label_frame, 'Binary Data', 10, 5) 
+        self.__binary_data_file_input = Input(input_label_frame, 'Binary Data File', 10, 35, True, 
                                               self.select_binary_file, button_xcoor=1060, button_width=160)
         self.__string_data_file_input = Input(input_label_frame, 'String Data File', 10, 65, True,
                                               self.select_data_file, button_xcoor=1060, button_width=160)
-
-        # Setup LabelFrame for Randomness Test
+        
+        # Setup LabelFrame for Randomness Test - y position reverted
         self._stest_selection_label_frame = LabelFrame(self.master, text="Randomness Testing", padx=5, pady=5)
         self._stest_selection_label_frame.config(font=("Calibri", 14))
-        self._stest_selection_label_frame.place(x=20, y=155, width=1260, height=450)
+        self._stest_selection_label_frame.place(x=20, y=155, width=1260, height=450) # Original y and height
 
         test_type_label_01 = LabelTag(self._stest_selection_label_frame, 'Test Type', 10, 5, 250, 11, border=2,
                                    relief="groove")
@@ -182,10 +193,21 @@ class Main(Frame):
 
         select_all_button = CustomButton(self.master, 'Select All Test', 20, 615, 100, self.select_all)
         deselect_all_button = CustomButton(self.master, 'De-Select All Test', 125, 615, 150, self.deselect_all)
-        execute_button = CustomButton(self.master, 'Execute Test', 280, 615, 100, self.execute)
+        self.execute_button = CustomButton(self.master, 'Execute Test', 280, 615, 100, self.execute)
         save_button = CustomButton(self.master, 'Save as Text File', 385, 615, 100, self.save_result_to_file)
         reset_button = CustomButton(self.master, 'Reset', 490, 615, 100, self.reset)
-        exit = CustomButton(self.master, 'Exit Program', 595, 615, 100, self.exit)
+        exit_button = CustomButton(self.master, 'Exit Program', 595, 615, 100, self.exit) # This was 'exit' variable, changed to 'exit_button' for clarity
+
+        # Frame for status elements - Adjusted y position
+        status_frame = ttk.Frame(self.master)
+        status_frame.place(x=20, y=635, width=1260, height=40) 
+
+        self.status_label = ttk.Label(status_frame, text="", font=("Calibri", 10), anchor="w")
+        self.status_label.pack(side=TOP, fill=X, padx=5, pady=(0,2)) # pady to give a little space before progressbar
+        
+        self.progress_bar = ttk.Progressbar(status_frame, orient=HORIZONTAL, length=1260, mode='determinate')
+        self.progress_bar.pack(side=BOTTOM, fill=X, padx=5, pady=(2,0))
+        self.progress_bar['value'] = 0 # Ensure initial value is 0
 
     def select_binary_file(self):
         """
@@ -223,8 +245,6 @@ class Main(Frame):
             self.__is_binary_file = False
             self.__is_data_file = True
 
-
-
     def select_all(self):
         """
         Select all test type displayed in the GUI. (Check all checkbox)
@@ -253,68 +273,187 @@ class Main(Frame):
         """
         print('Execute')
 
-        if len(self.__binary_input.get_data().strip().rstrip()) == 0 and\
-                len(self.__binary_data_file_input.get_data().strip().rstrip()) == 0 and\
-                len(self.__string_data_file_input.get_data().strip().rstrip()) == 0:
-            messagebox.showwarning("Warning",
-                                   'You must input the binary data or read the data from from the file.')
+        # Input validation and data preparation (reverted logic)
+        if len(self.__binary_input.get_data().strip().rstrip()) == 0 and \
+           len(self.__binary_data_file_input.get_data().strip().rstrip()) == 0 and \
+           len(self.__string_data_file_input.get_data().strip().rstrip()) == 0:
+            messagebox.showwarning("Warning", 'You must input the binary data or read the data from from the file.')
             return None
-        elif len(self.__binary_input.get_data().strip().rstrip()) > 0 and\
-                len(self.__binary_data_file_input.get_data().strip().rstrip()) > 0 and\
-                len(self.__string_data_file_input.get_data().strip().rstrip()) > 0:
-            messagebox.showwarning("Warning",
-                                   'You can either input the binary data or read the data from from the file.')
+        elif (len(self.__binary_input.get_data().strip().rstrip()) > 0 and \
+              (len(self.__binary_data_file_input.get_data().strip().rstrip()) > 0 or \
+               len(self.__string_data_file_input.get_data().strip().rstrip()) > 0)) or \
+             (len(self.__binary_data_file_input.get_data().strip().rstrip()) > 0 and \
+              len(self.__string_data_file_input.get_data().strip().rstrip()) > 0):
+            messagebox.showwarning("Warning", 'You can only use one input method at a time: direct binary, binary data file, or string data file.')
             return None
 
-        input = []
+        input_data_sequences = [] # Will hold the single binary string to test
 
         if not len(self.__binary_input.get_data()) == 0:
-            input.append(self.__binary_input.get_data())
-        elif not len(self.__binary_data_file_input.get_data()) == 0:
-            temp = []
-            if self.__file_name:
-                handle = open(self.__file_name)
-            for data in handle:
-                temp.append(data.strip().rstrip())
-            test_data = ''.join(temp)
-            input.append(test_data[:1000000])
-        elif not len(self.__string_data_file_input.get_data()) == 0:
-            data = []
-            count = 1
-            if self.__file_name:
-                handle = open(self.__file_name)
-            for item in handle:
-                if item.startswith('http://'):
-                    url = Tools.url_to_binary(item)
-                    data.append(Tools.string_to_binary(url))
-                else:
-                    data.append(Tools.string_to_binary(item))
-                count += 1
-            print(data)
-            input.append(''.join(data))
+            input_data_sequences.append(self.__binary_input.get_data().strip())
+            status_message = "Processing direct binary input..."
+        elif self.__is_binary_file and self.__file_name: # Binary Data File
+            try:
+                with open(self.__file_name, 'r') as handle:
+                    temp = [data.strip().rstrip() for data in handle]
+                test_data = ''.join(temp)[:1000000]
+                if not all(c in '01' for c in test_data):
+                     messagebox.showerror("Error", f"File {self.__file_name} contains non-binary characters.")
+                     return None
+                if not test_data:
+                    messagebox.showwarning("Warning", f"Binary data file '{os.path.basename(self.__file_name)}' is empty or resulted in empty data.")
+                    return None
+                input_data_sequences.append(test_data)
+                status_message = f"Processing binary data file: {os.path.basename(self.__file_name)}..."
+            except Exception as e:
+                messagebox.showerror("Error reading binary data file", f"Could not read file {self.__file_name}: {e}")
+                return None
+        elif self.__is_data_file and self.__file_name: # String Data File
+            processed_binary_data_list = []
+            try:
+                with open(self.__file_name, 'r') as handle:
+                    for item in handle:
+                        item_stripped = item.strip()
+                        if not item_stripped: continue
+                        if item_stripped.startswith('http://') or item_stripped.startswith('https://'):
+                            url_content = Tools.url_to_binary(item_stripped)
+                            processed_binary_data_list.append(Tools.string_to_binary(url_content))
+                        else:
+                            processed_binary_data_list.append(Tools.string_to_binary(item_stripped))
+                test_data = "".join(processed_binary_data_list)
+                if not test_data:
+                     messagebox.showwarning("Warning", f"String data file '{os.path.basename(self.__file_name)}' resulted in empty binary data.")
+                     return None
+                # Basic validation for binary string (already done by Tools.string_to_binary generally)
+                input_data_sequences.append(test_data)
+                status_message = f"Processing string data file: {os.path.basename(self.__file_name)}..."
+            except Exception as e:
+                messagebox.showerror("Error processing string data file", f"Could not process file {self.__file_name}: {e}")
+                return None
+        
+        if not input_data_sequences or not input_data_sequences[0]:
+             messagebox.showwarning("Warning", "Input data is empty or could not be processed.")
+             return None
 
-            #print(data)
-            #self.__test_data = Options(self.__stest_selection_label_frame, 'Input Data', data, 10, 5, 900)
+        test_data_to_process = input_data_sequences[0] # Worker expects a single string
+
+        # Length validation (re-add if needed, using self._test_min_lengths)
+        # selected_test_indices = self._get_selected_test_indices() # This method was removed, need to inline or re-add
+        # if not selected_test_indices:
+        #     messagebox.showwarning("Warning", "No tests selected.")
+        #     return None
+        # validation_result = self._validate_input_length(len(test_data_to_process), selected_test_indices)
+        # if isinstance(validation_result, str):
+        #     messagebox.showwarning("Input Data Warning", validation_result)
+        #     return None
 
         try:
-            for test_data in input:
-                count = 0
-                results = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
-                for item in self._test:
-                    if item.get_check_box_value() == 1:
-                        print(self._test_type[count], 'selected.')
-                        if count == 13:
-                            results[count] = self.__test_function[count](test_data, mode=1)
-                        else:
-                            results[count] = self.__test_function[count](test_data)
-                    count += 1
-                self._test_result.insert(0, results)
+            self.execute_button.config(state=DISABLED) # This should use the CustomButton's config
+            self.status_label.config(text=status_message) # Use the status_message set above
+            self.progress_bar['value'] = 0
+            self.progress_bar['maximum'] = 100 # Default max, will be updated by 'start' msg from worker
 
-            self.write_results(self._test_result[0])
-            messagebox.showinfo("Execute", "Test Complete.")
+            self._latest_results = [] # Clear previous results
+            
+            # Pass the determined test_data_to_process (list of paths or single string) to the worker
+            worker_thread = threading.Thread(target=self._execute_tests_worker, args=(test_data_to_process,))
+            worker_thread.start()
+            
+            self.master.after(100, self._process_ui_queue)
         except Exception as e:
             messagebox.showerror("Error", str(e))
             print(e)
+
+    def _execute_tests_worker(self, test_data_input):
+        """
+        Worker method to execute randomness tests in a separate thread.
+        Stores results in self._latest_results and appends to self._test_result (for single runs).
+        Handles batch processing by iterating through files. (Reverted: only single string input)
+        """
+        # Reverted: This worker now only processes a single string.
+        # selected_test_indices = self._get_selected_test_indices() # This method is removed
+        # num_selected_tests = len(selected_test_indices)
+        
+        num_selected_tests = sum(1 for item in self._test if item.get_check_box_value() == 1)
+
+        if num_selected_tests == 0:
+            self._ui_queue.put({'type': 'error', 'message': 'No tests selected.'})
+            return
+        
+        self._ui_queue.put({'type': 'start', 'total_tests': num_selected_tests}) # Removed mode
+        try:
+            current_run_results = [() for _ in range(len(self._test_type))]
+            completed_count = 0
+            test_idx = 0 # Reverted from iterating selected_test_indices
+            for item in self._test: # Reverted
+                if item.get_check_box_value() == 1:
+                    if test_idx == 13: 
+                        current_run_results[test_idx] = self.__test_function[test_idx](test_data_input, mode=1)
+                    else:
+                        current_run_results[test_idx] = self.__test_function[test_idx](test_data_input)
+                    completed_count += 1
+                    self._ui_queue.put({
+                        'type': 'progress',
+                        'test_name': self._test_type[test_idx],
+                        'completed_tests': completed_count,
+                        'total_tests_in_current_run': num_selected_tests 
+                    })
+                test_idx += 1
+            
+            self._latest_results = current_run_results
+            self._test_result.insert(0, self._latest_results) 
+            self._ui_queue.put({'type': 'complete', 'results': self._latest_results}) # Removed mode
+            print("Test run completed in worker. Results sent to UI queue.")
+        except Exception as e:
+            print(f"Error in worker thread: {e}")
+            self._ui_queue.put({'type': 'error', 'message': str(e)})
+
+    def _process_ui_queue(self):
+        """
+        Process messages from the UI queue to update the GUI.
+        """
+        try:
+            while True: # Process all messages currently in the queue
+                msg = self._ui_queue.get_nowait()
+
+                if msg['type'] == 'start':
+                    # Removed mode handling, progress bar max is always total_tests
+                    self.progress_bar['maximum'] = msg['total_tests'] if msg.get('total_tests', 0) > 0 else 100
+                    self.progress_bar['value'] = 0
+                    self.status_label.config(text=f"Test run started. Total selected tests: {msg['total_tests']}.")
+                    self.write_results([]) 
+                
+                elif msg['type'] == 'progress': 
+                    self.progress_bar['value'] = msg['completed_tests']
+                    self.status_label.config(text=f"Running test {msg['completed_tests']}/{msg['total_tests_in_current_run']}: {msg['test_name']}...")
+                
+                elif msg['type'] == 'complete': # Reverted: only one type of complete
+                    self.status_label.config(text="Test run completed successfully.")
+                    self.write_results(msg['results']) 
+                    messagebox.showinfo("Execute", "Test Run Complete.")
+                    self.progress_bar['value'] = 0 
+                    self.execute_button.config(state=NORMAL)
+                    return 
+                
+                elif msg['type'] == 'error': 
+                    self.status_label.config(text=f"Error: {msg['message']}")
+                    messagebox.showerror("Error", msg['message'])
+                    self.progress_bar['value'] = 0 
+                    self.execute_button.config(state=NORMAL)
+                    self._current_processing_mode = None
+                    return 
+
+        except queue.Empty:
+            # If queue is empty, do nothing and continue polling
+            pass
+        except Exception as e:
+            # Handle any other unexpected errors during UI update
+            print(f"Error processing UI queue: {e}")
+            self.status_label.config(text="Error updating UI.")
+            self.execute_button.config(state=NORMAL) # Ensure button is re-enabled
+            return # Stop polling on unexpected error
+
+        self.master.after(100, self._process_ui_queue) # Continue polling
 
     def write_results(self, results):
         """
@@ -357,77 +496,83 @@ class Main(Frame):
 
             count += 1
 
-    def save_result_to_file(self):
+    def save_result_to_file(self): # Reverted signature
         print('Save to File')
-        print(self._test_result)
-        if not len(self.__binary_input.get_data()) == 0:
-            output_file = asksaveasfile(mode='w', defaultextension=".txt")
-            output_file.write('Test Data:' + self.__binary_input.get_data() + '\n\n\n')
-            result = self._test_result[0]
-            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-            self.write_result_to_file(output_file, result)
-            output_file.close()
-            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
-        elif not len(self.__binary_data_file_input.get_data()) == 0:
-            output_file = asksaveasfile(mode='w', defaultextension=".txt")
-            output_file.write('Test Data File:' + self.__binary_data_file_input.get_data() + '\n\n\n')
-            result = self._test_result[0]
-            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-            self.write_result_to_file(output_file, result)
-            output_file.close()
-            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
-        elif not len(self.__string_data_file_input.get_data()) == 0:
-            output_file = asksaveasfile(mode='w', defaultextension=".txt")
-            output_file.write('Test Data File:' + self.__string_data_file_input.get_data() + '\n\n')
-            #count = 0
-            #for item in self.__test_string:
-            #    output_file.write('Test ' + str(count+1) + ':\n')
-            #    output_file.write('String to be tested: %s' % item)
-            #    output_file.write('Binary of the given String: %s\n\n' % Tools.string_to_binary(item))
-            #    output_file.write('Result:\n')
-            #    output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-            #    self.write_result_to_file(output_file, self._test_result[count])
-            #    output_file.write('\n\n')
-            #    count += 1
-            result = self._test_result[0]
-            output_file.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
-            self.write_result_to_file(output_file, result)
-            output_file.close()
-            messagebox.showinfo("Save",  "File save finished.  You can check the output file for complete result.")
+        if not self._test_result: # Check if there are any results to save
+            messagebox.showwarning("Save Warning", "No test results available to save.")
+            return
 
-    def write_result_to_file(self, output_file, result):
-        for count in range(16):
-            if self._test[count].get_check_box_value() == 1:
-                if count == 10:
-                    output_file.write(self._test_type[count] + ':\n')
+        results_to_save = self._test_result[0] # Get the latest results
+
+        # Determine original_file_info_string based on input method
+        original_file_info_string = "Test Data Source: Unknown"
+        if not len(self.__binary_input.get_data()) == 0:
+             original_file_info_string = 'Test Data (Direct Input):\n' + self.__binary_input.get_data()
+        elif self.__is_binary_file and self.__file_name:
+             original_file_info_string = 'Test Data File (Binary):\n' + self.__file_name
+        elif self.__is_data_file and self.__file_name:
+             original_file_info_string = 'Test Data File (String/URL):\n' + self.__file_name
+        
+        try:
+            # Use asksaveasfile to prompt user for filename
+            output_file_obj = asksaveasfile(mode='w', defaultextension=".txt",
+                                        title="Save Test Report As",
+                                        filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+            if output_file_obj is None: # User cancelled
+                return
+
+            with output_file_obj: # Ensures file is closed automatically
+                output_file_obj.write(original_file_info_string + '\n\n\n')
+                output_file_obj.write('%-50s\t%-20s\t%-10s\n' % ('Type of Test', 'P-Value', 'Conclusion'))
+                self._write_detailed_results_to_file(output_file_obj, results_to_save)
+            
+            messagebox.showinfo("Save",  f"File save finished. Report saved to {output_file_obj.name}.")
+        except Exception as e:
+            messagebox.showerror("Save Error", f"Could not save report: {e}")
+
+
+    def _write_detailed_results_to_file(self, output_file, result_data): # Name kept, but logic is original
+        """
+        Helper method to write the detailed test results to an open file object.
+        """
+        for test_idx in range(len(self._test_type)): 
+            # Check if test was selected and results exist for this index
+            if test_idx < len(result_data) and self._test[test_idx].get_check_box_value() == 1 and result_data[test_idx]:
+                current_result = result_data[test_idx]
+                if not current_result: 
+                    continue
+
+                if test_idx == 10: 
+                    output_file.write(self._test_type[test_idx] + ':\n') # Original logic for Serial
                     output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
-                    str(result[count][0][0]), self.get_result_string(result[count][0][1]))
+                    str(current_result[0][0]), self.get_result_string(current_result[0][1]))
                     output_file.write(output)
                     output = '\t\t\t\t\t\t\t\t\t\t\t\t\t%-20s\t%s\n' % (
-                    str(result[count][1][0]), self.get_result_string(result[count][1][1]))
+                    str(current_result[1][0]), self.get_result_string(current_result[1][1]))
                     output_file.write(output)
-                    pass
-                elif count == 14:
-                    output_file.write(self._test_type[count] + ':\n')
+                elif test_idx == 14: # Original logic for Random Excursions
+                    output_file.write(self._test_type[test_idx] + ':\n')
                     output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'Chi Squared', 'P-Value', 'Conclusion')
                     output_file.write(output)
-                    for item in result[count]:
+                    for item in current_result:
                         output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
                         item[0], item[2], item[3], self.get_result_string(item[4]))
                         output_file.write(output)
-                elif count == 15:
-                    output_file.write(self._test_type[count] + ':\n')
+                elif test_idx == 15: # Original logic for Random Excursions Variant
+                    output_file.write(self._test_type[test_idx] + ':\n')
                     output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % ('State ', 'COUNTS', 'P-Value', 'Conclusion')
                     output_file.write(output)
-                    for item in result[count]:
+                    for item in current_result:
                         output = '\t\t\t\t%-10s\t%-20s\t%-20s\t%s\n' % (
                         item[0], item[2], item[3], self.get_result_string(item[4]))
                         output_file.write(output)
-                else:
+                else: # Original logic for other tests
                     output = '%-50s\t%-20s\t%s\n' % (
-                    self._test_type[count], str(result[count][0]), self.get_result_string(result[count][1]))
+                    self._test_type[test_idx], str(current_result[0]), self.get_result_string(current_result[1]))
                     output_file.write(output)
-            count += 1
+            elif self._test[test_idx].get_check_box_value() == 1: 
+                 output_file.write(f"{self._test_type[test_idx]}\t-\tTest selected but no result data.\n")
+
 
     #def change_data(self):
     #    index = int(self.__test_data.get_selected().split(' ')[0])
@@ -444,10 +589,19 @@ class Main(Frame):
         """
         print('Reset')
         self.__binary_input.set_data('')
-        self.__binary_data_file_input.set_data('')
-        self.__string_data_file_input.set_data('')
-        self.__is_binary_file = False
-        self.__is_data_file = False
+        self.__binary_data_file_input.set_data('') # Restored
+        self.__string_data_file_input.set_data('') # Restored
+
+        self.__is_binary_file = False 
+        self.__is_data_file = False   
+
+        # Resetting UI elements
+        if hasattr(self, 'status_label'): 
+            self.status_label.config(text="")
+        if hasattr(self, 'progress_bar'): 
+            self.progress_bar['value'] = 0
+        # Removed data_info_label reset as it's being removed
+            
         self._monobit.reset()
         self._block.reset()
         self._run.reset()
@@ -493,7 +647,7 @@ if __name__ == '__main__':
     np.seterr('raise') # Make exceptions fatal, otherwise GUI might get inconsistent
     root = Tk()
     root.resizable(0, 0)
-    root.geometry("%dx%d+0+0" % (1300, 650))
+    root.geometry("%dx%d+0+0" % (1300, 650)) # Reverted window height
     title = 'Test Suite for NIST Random Numbers'
     root.title(title)
     app = Main(root)

@@ -1,40 +1,49 @@
-from tkinter import Button
+from tkinter import ttk
 from tkinter import Canvas
-from tkinter import Checkbutton
-from tkinter import DISABLED
-from tkinter import Entry
+from tkinter import DISABLED # Keep for Entry state if needed, though ttk uses 'readonly'
 from tkinter import Frame
 from tkinter import IntVar
-from tkinter import Label
-from tkinter import LabelFrame
-from tkinter import OptionMenu
+from tkinter import LabelFrame # ttk.LabelFrame is available if we want to switch this too
 from tkinter import Scrollbar
 from tkinter import StringVar
 
 class CustomButton:
 
     def __init__(self, master, title, x_coor, y_coor, width, action=None):
-        button = Button(master, text=title, command=action)
-        button.config(font=("Calibri", 10))
-        button.place(x=x_coor, y=y_coor, width=width, height=25)
+        # ttk.Button does not have a config method for font in the same way.
+        # Style objects are preferred for ttk widgets. For simplicity here, let's assume default font or
+        # handle styling at a higher level if necessary (e.g. via ttk.Style).
+        self.button = ttk.Button(master, text=title, command=action)
+        self.button.place(x=x_coor, y=y_coor, width=width, height=25)
+
+    def config(self, **kwargs):
+        if 'state' in kwargs:
+            button_state = kwargs.pop('state')
+            if button_state == 'disabled' or button_state == DISABLED:
+                self.button.state(['disabled'])
+            elif button_state == 'normal':
+                self.button.state(['!disabled'])
+        
+        # Pass any other configuration options to the underlying ttk.Button
+        if kwargs:
+            self.button.configure(**kwargs)
 
 class Input:
 
-    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, state='disabled', button_xcoor=1050, button_width=180):
+    def __init__(self, master, title, x_coor, y_coor, has_button=False, action=None, button_xcoor=1050, button_width=180):
         # Setup Labels
-        label = Label(master, text=title)
-        label.config(font=("Calibri", 12))
+        label = ttk.Label(master, text=title, font=("Calibri", 12))
         label.place(x=x_coor, y=y_coor, height=25)
 
         self.__data = StringVar()
-        self.__data_entry = Entry(master, textvariable=self.__data)
+        self.__data_entry = ttk.Entry(master, textvariable=self.__data, font=("Calibri", 10))
         self.__data_entry.place(x=150, y=y_coor, width=900, height=25)
 
         if has_button:
-            self.__data_entry.config(state='disabled')
+            self.__data_entry.config(state='readonly') # ttk.Entry uses 'readonly' for disabled look but selectable text
             button_title = 'Select ' + title
-            button = Button(master, text=button_title, command=action)
-            button.config(font=("Calibri", 10))
+            # Using ttk.Button for consistency
+            button = ttk.Button(master, text=button_title, command=action)
             button.place(x=button_xcoor, y=y_coor, width=180, height=25)
 
     def set_data(self, value):
@@ -43,26 +52,31 @@ class Input:
     def get_data(self):
         return self.__data.get()
 
-    def change_state(self, state):
+    def change_state(self, state): # state can be 'normal', 'disabled', 'readonly'
         self.__data_entry.config(state=state)
 
 class LabelTag:
 
     def __init__(self, master, title, x_coor, y_coor, width, font_size=18, border=0, relief='flat'):
-        label = Label(master, text=title, borderwidth=border, relief=relief)
-        label.config(font=("Calibri", font_size))
+        # ttk.Label uses 'borderwidth' and 'relief' options directly in constructor.
+        # Font can be set directly too.
+        label = ttk.Label(master, text=title, borderwidth=border, relief=relief, font=("Calibri", font_size))
         label.place(x=x_coor, y=y_coor, width=width, height=25)
 
-class Options:
+class Options: # This class seems unused in Main.py based on current context, but updating it.
 
     def __init__(self, master, title, data, x_coor, y_coor, width):
-
         self.__selected = StringVar()
-        label = Label(master, text=title)
-        label.config(font=("Calibri", 12))
-        self.__selected.set(data[0])
+        # Ensure data is not empty and contains valid strings for OptionMenu
+        if not data or not all(isinstance(item, str) for item in data):
+            data = ["Default"] # Provide a default if data is invalid/empty
+
+        label = ttk.Label(master, text=title, font=("Calibri", 12))
         label.place(x=x_coor, y=y_coor, height=25, width=100)
-        self.__option = OptionMenu(master, self.__selected, *data)
+        
+        self.__selected.set(data[0])
+        # ttk.OptionMenu constructor is slightly different: master, variable, default_value, *values
+        self.__option = ttk.OptionMenu(master, self.__selected, data[0], *data)
         self.__option.place(x=150, y=y_coor, height=25, width=width)
 
     def set_selected(self, data):
@@ -71,10 +85,22 @@ class Options:
     def get_selected(self):
         return self.__selected.get()
 
-    def update_data(self, data):
-        self.__option.option_clear()
-        self.__option.option_add(data, '')
-        self.__option.update()
+    def update_data(self, data_list): # Assuming data_list is a list of strings
+        # ttk.OptionMenu doesn't have direct option_clear/add. Recreate or set new menu.
+        # For simplicity, if this method is crucial, it might need a more complex handling
+        # such as destroying and recreating the OptionMenu or directly manipulating its internal menu.
+        # A common approach is to update the StringVar and the list of options it points to,
+        # then potentially re-initialize the OptionMenu if direct update isn't supported.
+        # Given this class is likely unused, this simplification is acceptable for now.
+        menu = self.__option["menu"]
+        menu.delete(0, "end")
+        if not data_list or not all(isinstance(item, str) for item in data_list):
+            data_list = ["Default"]
+
+        for string in data_list:
+            menu.add_command(label=string, command=lambda value=string: self.__selected.set(value))
+        self.__selected.set(data_list[0])
+
 
 class TestItem:
 
@@ -84,34 +110,37 @@ class TestItem:
         self.__result = StringVar()
         self.__p_value_02 = StringVar()
         self.__result_02 = StringVar()
-        checkbox = Checkbutton(master, text=title, variable=self.__chb_var)
-        checkbox.config(font=("Calibri", font_size))
-        checkbox.place(x=x_coor, y=y_coor)
+        
+        # ttk.Checkbutton font is typically managed by style.
+        # For direct font setting, it's less straightforward than tkinter.Checkbutton.
+        # Using style is preferred. For now, let's omit direct font config on Checkbutton.
+        checkbox = ttk.Checkbutton(master, text=title, variable=self.__chb_var)
+        checkbox.place(x=x_coor, y=y_coor) # Consider adjusting height/width if needed
 
-        p_value_entry = Entry(master, textvariable=self.__p_value)
-        p_value_entry.config(state=DISABLED)
+        p_value_entry = ttk.Entry(master, textvariable=self.__p_value, font=("Calibri", font_size))
+        p_value_entry.config(state='readonly')
         p_value_entry.place(x=p_value_x_coor, y=y_coor, width=p_value_width, height=25)
 
-        result_entry = Entry(master, textvariable=self.__result)
-        result_entry.config(state=DISABLED)
+        result_entry = ttk.Entry(master, textvariable=self.__result, font=("Calibri", font_size))
+        result_entry.config(state='readonly')
         result_entry.place(x=result_x_coor, y=y_coor, width=result_width, height=25)
 
         if serial and two_columns:
-            p_value_entry_02 = Entry(master, textvariable=self.__p_value_02)
-            p_value_entry_02.config(state=DISABLED)
+            p_value_entry_02 = ttk.Entry(master, textvariable=self.__p_value_02, font=("Calibri", font_size))
+            p_value_entry_02.config(state='readonly')
             p_value_entry_02.place(x=875, y=y_coor, width=235, height=25)
 
-            result_entry_02 = Entry(master, textvariable=self.__result_02)
-            result_entry_02.config(state=DISABLED)
+            result_entry_02 = ttk.Entry(master, textvariable=self.__result_02, font=("Calibri", font_size))
+            result_entry_02.config(state='readonly')
             result_entry_02.place(x=1115, y=y_coor, width=110, height=25)
-        elif serial and not two_columns:
-            p_value_entry_02 = Entry(master, textvariable=self.__p_value_02)
-            p_value_entry_02.config(state=DISABLED)
-            p_value_entry_02.place(x=365, y=y_coor+25, width=500, height=25)
+        elif serial and not two_columns: # This case seems specific for Serial test layout
+            p_value_entry_02 = ttk.Entry(master, textvariable=self.__p_value_02, font=("Calibri", font_size))
+            p_value_entry_02.config(state='readonly')
+            p_value_entry_02.place(x=p_value_x_coor, y=y_coor+25, width=p_value_width, height=25) # Adjusted y
 
-            result_entry_02 = Entry(master, textvariable=self.__result_02)
-            result_entry_02.config(state=DISABLED)
-            result_entry_02.place(x=870, y=y_coor+25, width=350, height=25)
+            result_entry_02 = ttk.Entry(master, textvariable=self.__result_02, font=("Calibri", font_size))
+            result_entry_02.config(state='readonly')
+            result_entry_02.place(x=result_x_coor, y=y_coor+25, width=result_width, height=25) # Adjusted y
 
     def get_check_box_value(self):
         return self.__chb_var.get()
@@ -161,43 +190,49 @@ class RandomExcursionTestItem:
         self.__xObs = StringVar()
         self.__p_value = StringVar()
         self.__result = StringVar()
-        self.__results = []
+        self.__results = [] # This will store the list of tuples for excursion results
         self.__variant = variant
 
-        checkbox = Checkbutton(master, text=title, variable=self.__chb_var)
-        checkbox.config(font=("Calibri", font_size))
+        # ttk.Checkbutton, font styling is less direct.
+        checkbox = ttk.Checkbutton(master, text=title, variable=self.__chb_var)
         checkbox.place(x=x_coor, y=y_coor)
 
+        # LabelTag is already updated to use ttk.Label
         state_label = LabelTag(master, 'State', (x_coor + 60), (y_coor + 30), width=100, font_size=font_size, border=2, relief='groove')
+        
+        # Ensure data for OptionMenu is valid
+        if not data or not all(isinstance(item, str) for item in data):
+            data = ["DefaultState"] # Fallback data
+
         if variant:
-            self.__state.set('-1.0')
+            self.__state.set(data[0] if data[0] in ['-9.0', '-8.0', '-7.0', '-6.0', '-5.0', '-4.0', '-3.0', '-2.0', '-1.0', '+1.0', '+2.0', '+3.0', '+4.0', '+5.0', '+6.0', '+7.0', '+8.0', '+9.0'] else data[0]) # Ensure initial value is in list
         else:
-            self.__state.set('+1')
-        state_option = OptionMenu(master, self.__state, *data)
+            self.__state.set(data[0] if data[0] in ['-4', '-3', '-2', '-1', '+1', '+2', '+3', '+4'] else data[0]) # Ensure initial value is in list
+        
+        state_option = ttk.OptionMenu(master, self.__state, self.__state.get(), *data)
         state_option.place(x=(x_coor + 60), y=(y_coor + 60), height=25, width=100)
-        self.__state.trace("w", self.update)
+        self.__state.trace_add("write", self.update) # Use trace_add for newer Tkinter versions
+
+        entry_font = ("Calibri", font_size)
         if not variant:
-            xObs_label = LabelTag(master, 'Chi^2', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2,
-                                   relief='groove')
-            xObs_Entry = Entry(master, textvariable=self.__xObs)
-            xObs_Entry.config(state=DISABLED)
+            xObs_label = LabelTag(master, 'Chi^2', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2, relief='groove')
+            xObs_Entry = ttk.Entry(master, textvariable=self.__xObs, font=entry_font)
+            xObs_Entry.config(state='readonly')
             xObs_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
         else:
-            count_label = LabelTag(master, 'Count', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size,
-                                  border=2, relief='groove')
-            count_Entry = Entry(master, textvariable=self.__count)
-            count_Entry.config(state=DISABLED)
+            count_label = LabelTag(master, 'Count', (x_coor + 165), (y_coor + 30), width=350, font_size=font_size, border=2, relief='groove')
+            count_Entry = ttk.Entry(master, textvariable=self.__count, font=entry_font)
+            count_Entry.config(state='readonly')
             count_Entry.place(x=(x_coor + 165), y=(y_coor + 60), width=350, height=25)
-            pass
-        p_value_label = LabelTag(master, 'P-Value', (x_coor + 520), (y_coor + 30), width=350, font_size=font_size, border=2,
-                               relief='groove')
-        p_value_Entry = Entry(master, textvariable=self.__p_value)
-        p_value_Entry.config(state=DISABLED)
+
+        p_value_label = LabelTag(master, 'P-Value', (x_coor + 520), (y_coor + 30), width=350, font_size=font_size, border=2, relief='groove')
+        p_value_Entry = ttk.Entry(master, textvariable=self.__p_value, font=entry_font)
+        p_value_Entry.config(state='readonly')
         p_value_Entry.place(x=(x_coor + 520), y=(y_coor + 60), width=350, height=25)
-        conclusion_label = LabelTag(master, 'Result', (x_coor + 875), (y_coor + 30), width=150, font_size=font_size, border=2,
-                               relief='groove')
-        conclusion_Entry = Entry(master, textvariable=self.__result)
-        conclusion_Entry.config(state=DISABLED)
+
+        conclusion_label = LabelTag(master, 'Result', (x_coor + 875), (y_coor + 30), width=150, font_size=font_size, border=2, relief='groove')
+        conclusion_Entry = ttk.Entry(master, textvariable=self.__result, font=entry_font)
+        conclusion_Entry.config(state='readonly')
         conclusion_Entry.place(x=(x_coor + 875), y=(y_coor + 60), width=150, height=25)
 
     def get_check_box_value(self):
