@@ -23,7 +23,7 @@ pip3 install numpy, scipy
     * Input Data - Input Data contains Binary Data, Binary Data File and String Data File
     * Binary Data - You can only enter a BINARY STRING here (ex:1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000)
     * Binary Data File - This will open a file dialog where you can select a file to be read by program.
-                       The file you selected should contain only one set of data in BINARY FORM.  (For example, please refer to data/data.e)
+                       The file must be a plain text file containing only the characters `0` and `1` (e.g. `0110100111...`). Do NOT use a raw binary file — the file should be human-readable ASCII.  (For example, please refer to data/data.e)
     * String Data File - This will open a file dialog where you can select a file to be read by program.
                        The file you selected can contain multiple set of data in STRING FORM.  (For example, please refer to data/test_data_01.txt)
 
