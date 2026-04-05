@@ -75,7 +75,7 @@ class ComplexityTest:
 
             return (p_value, (p_value >= 0.01))
         else:
-            return (-1.0, False)
+            return (0.0, False, 'Error: Not enough data to run this test. Minimum input length is {} bits (2 blocks of {}).'.format(2 * block_size, block_size))
 
     @staticmethod
     def berlekamp_massey_algorithm(block_data):

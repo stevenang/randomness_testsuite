@@ -78,4 +78,4 @@ class Matrix:
 
             return (p_value, (p_value >= 0.01))
         else:
-            return (-1.0, False)
+            return (0.0, False, 'Error: Not enough data to run this test. Minimum input length is 1024 bits (32x32 matrix).')

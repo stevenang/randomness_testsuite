@@ -23,6 +23,10 @@ class SpectralTest:
         :return:    (p_value, bool)     A tuple which contain the p_value and result of frequency_test(True or False)
         """
         length_of_binary_data = len(binary_data)
+
+        if length_of_binary_data < 1000:
+            return (0.0, False, 'Error: Not enough data to run this test. Minimum input length is 1000 bits.')
+
         plus_one_minus_one = []
 
         # Step 1 - The zeros and ones of the input sequence (ε) are converted to values of –1 and +1

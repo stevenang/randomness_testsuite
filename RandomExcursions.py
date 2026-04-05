@@ -60,6 +60,10 @@ class RandomExcursions:
             cycles.append(cumulative_sum[position[pos]:position[pos + 1] + 1])
         num_cycles = len(cycles)
 
+        if num_cycles == 0:
+            states = ['-4', '-3', '-2', '-1', '+1', '+2', '+3', '+4']
+            return [(states[i], x_values[i], 0.0, 0.0, False) for i in range(len(x_values))]
+
         state_count = []
         for cycle in cycles:
             # Determine the number of times each cycle visits each state
