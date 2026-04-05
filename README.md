@@ -158,6 +158,35 @@ Process finished with exit code 0
 ```
 * For more example, you can check test_pi.py, test_sqrt2.py, test_sqrt3.py
 
+### Batch testing multiple sequences (NIST Section 4 analysis)
+Use `batch_test.py` to test many sequences at once and get the aggregate
+statistics described in NIST SP 800-22 Section 4:
+```
+python3 batch_test.py <sequences_file>
+```
+The sequences file must be a plain text file with **one binary sequence per line**:
+```
+10110011010001...
+01001110100110...
+11001010011101...
+```
+For each test, the script reports:
+* **Proportion** – fraction of sequences that passed (p-value ≥ 0.01), checked against the NIST confidence interval `[1-α ± 3√(α(1-α)/m)]`
+* **Unif. p-T** – chi-square uniformity of the p-value distribution across 10 subintervals; pass if p-T ≥ 0.0001
+
+Example output (10 sequences):
+```
+Test                               Proportion       m  Prop.   Unif. p-T  Unif.
+Acceptable proportion range: [0.8956, 1.0844]  (α=0.01, m=10)
+-------------------------------------------------------------------------------
+Frequency (Monobit)                    1.0000      10   PASS    0.739918   PASS
+Block Frequency                        1.0000      10   PASS    0.066882   PASS
+Runs                                   1.0000      10   PASS    0.534146   PASS
+...
+```
+NIST recommends at least 55 sequences for meaningful proportion analysis
+(gives a confidence interval of roughly ±0.04 around the 0.99 target).
+
 ## Change logs
 ### 1.3
    * Changed screen layout to fixedthe issue with the resolution lower than 1920 x 1080 
