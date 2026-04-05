@@ -1,6 +1,6 @@
 # NIST Randomness Testsuit
 
-This is a Python implementation of NIST's A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications
+This is a Python implementation of **NIST SP 800-22** – A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications
 
 ## Getting Started
 
