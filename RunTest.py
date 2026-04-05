@@ -61,7 +61,7 @@ class RunTest:
             print('\tP-Value:\t\t\t\t\t\t', p_value)
             print('DEBUG END.')
 
-        return (p_value, (p_value > 0.01))
+        return (p_value, (p_value >= 0.01))
 
     @staticmethod
     def longest_one_block_test(binary_data:str, verbose=False):
@@ -123,7 +123,7 @@ class RunTest:
                     max_run_count = max(max_run_count, run_count)
                     run_count = 0
 
-            max(max_run_count, run_count)
+            max_run_count = max(max_run_count, run_count)
 
             #print('Block Data: ', block_data, '. Run Count: ', max_run_count)
 
@@ -158,4 +158,4 @@ class RunTest:
             print('\tP-Value:\t\t\t\t\t\t', p_value)
             print('DEBUG END.')
 
-        return (p_value, (p_value > 0.01))
+        return (p_value, (p_value >= 0.01))
