@@ -27,6 +27,10 @@ class TemplateMatching:
 
         length_of_binary = len(binary_data)
         pattern_size = len(template_pattern)
+
+        if length_of_binary < block * pattern_size:
+            return (0.0, False, 'Error: Not enough data to run this test. Minimum input length is {} bits.'.format(block * pattern_size))
+
         block_size = floor(length_of_binary / block)
         pattern_counts = zeros(block)
 
@@ -89,6 +93,10 @@ class TemplateMatching:
         :return:    (p_value, bool) A tuple which contain the p_value and result of frequency_test(True or False)
         """
         length_of_binary_data = len(binary_data)
+
+        if length_of_binary_data < block_size:
+            return (0.0, False, 'Error: Not enough data to run this test. Minimum input length is {} bits.'.format(block_size))
+
         pattern = ''
         for count in range(pattern_size):
             pattern += '1'
