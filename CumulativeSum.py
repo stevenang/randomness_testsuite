@@ -56,18 +56,32 @@ class CumulativeSums:
 
         terms_one = []
         for k in range(start, end + 1):
-            sub = norm.cdf((4 * k - 1) * abs_max / sqrt(length_of_binary_data))
-            terms_one.append(norm.cdf((4 * k + 1) * abs_max / sqrt(length_of_binary_data)) - sub)
+            # Handle the central interval analytically below to retain small tails.
+            if k == 0:
+                continue
+            if k > 0:
+                sub = norm.sf((4 * k + 1) * abs_max / sqrt(length_of_binary_data))
+                terms_one.append(norm.sf((4 * k - 1) * abs_max / sqrt(length_of_binary_data)) - sub)
+            else:
+                sub = norm.cdf((4 * k - 1) * abs_max / sqrt(length_of_binary_data))
+                terms_one.append(norm.cdf((4 * k + 1) * abs_max / sqrt(length_of_binary_data)) - sub)
 
         start = int(floor(0.25 * floor(-length_of_binary_data / abs_max - 3)))
-        end = int(floor(0.25 * floor(length_of_binary_data / abs_max) - 1))
+        # Both sums have upper bound floor((n / z - 1) / 4).
+        end = int(floor(0.25 * floor(length_of_binary_data / abs_max - 1)))
 
         terms_two = []
         for k in range(start, end + 1):
-            sub = norm.cdf((4 * k + 1) * abs_max / sqrt(length_of_binary_data))
-            terms_two.append(norm.cdf((4 * k + 3) * abs_max / sqrt(length_of_binary_data)) - sub)
+            # Survival functions avoid subtracting two CDF values near one.
+            if k >= 0:
+                sub = norm.sf((4 * k + 3) * abs_max / sqrt(length_of_binary_data))
+                terms_two.append(norm.sf((4 * k + 1) * abs_max / sqrt(length_of_binary_data)) - sub)
+            else:
+                sub = norm.cdf((4 * k + 1) * abs_max / sqrt(length_of_binary_data))
+                terms_two.append(norm.cdf((4 * k + 3) * abs_max / sqrt(length_of_binary_data)) - sub)
 
-        p_value = 1.0 - sum(array(terms_one))
+        # 1 - (Phi(z/sqrt(n)) - Phi(-z/sqrt(n))) = 2 * sf(z/sqrt(n)).
+        p_value = 2 * norm.sf(abs_max / sqrt(length_of_binary_data)) - sum(array(terms_one))
         p_value += sum(array(terms_two))
 
         if verbose:
