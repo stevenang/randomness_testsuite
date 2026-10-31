@@ -98,7 +98,7 @@ for item in result:
     print('\t\t', repr(item[0]).rjust(4), '\t\t', item[2], '\t\t', repr(item[3]).ljust(14), '\t\t',
           (item[4] >= 0.01))
 ```
-* Output of the code above:
+* Output of the code above (the final floating-point digits may vary with NumPy/SciPy versions):
 ```
 The statistical test of the Binary Expansion of e
 2.01. Frequency Test:								 (0.9537486285283232, True)
@@ -122,7 +122,7 @@ DEBUG END.
 2.11. Serial Test:									 ((0.766181646833394, True), (0.46292132409575854, True))
 2.12. Approximate Entropy Test:						 (0.7000733881151612, True)
 2.13. Cumulative Sums (Forward):					 (0.6698864641681423, True)
-2.13. Cumulative Sums (Backward):					 (0.7242653099698069, True)
+2.13. Cumulative Sums (Backward):					 (0.7242653099698064, True)
 2.14. Random Excursion Test:
 		 STATE 			 xObs 				 P-Value 			 Conclusion
 		 '-4' 		 3.8356982129929085 		 0.5733056949947805 		 True

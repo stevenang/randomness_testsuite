@@ -34,10 +34,35 @@ def reference_p_value(bits):
 @pytest.mark.parametrize('bits', ['1011010111', '11110000', '10101010', '11010010', '111100'])
 @pytest.mark.parametrize('mode', [0, 1])
 def test_summation_bounds(bits, mode):
+    # These short fixtures isolate the summation algebra, not statistical
+    # validity: NIST SP 800-22 section 2.13.7 recommends at least 100 bits.
+    # Below that recommendation, the approximation can even exceed one
+    # (as it does for '10101010' in both modes).
     expected = reference_p_value(bits if mode == 0 else bits[::-1])
     p_value, accepted = CumulativeSums.cumulative_sums_test(bits, mode)
     assert p_value == pytest.approx(expected, rel=1e-13, abs=1e-15)
     assert bool(accepted) == (expected >= 0.01)
+
+
+@pytest.mark.parametrize('mode', [0, 1])
+def test_summation_bounds_at_acceptance_threshold(mode):
+    bits = '1' * 28 + '01' * 36
+    ordered_bits = bits if mode == 0 else bits[::-1]
+    walk = 0
+    z = 0
+    for bit in ordered_bits:
+        walk += 1 if bit == '1' else -1
+        z = max(z, abs(walk))
+    assert len(bits) == 100
+    assert z == 28
+
+    # Meets NIST's length recommendation. The former second-sum upper bound
+    # omitted k=0, producing about 0.00766539 and an incorrect rejection.
+    expected = reference_p_value(ordered_bits)
+    assert expected == pytest.approx(0.010220521321711664, rel=1e-13, abs=1e-15)
+    p_value, accepted = CumulativeSums.cumulative_sums_test(bits, mode)
+    assert p_value == pytest.approx(expected, rel=1e-13, abs=1e-15)
+    assert bool(accepted) is True
 
 
 @pytest.mark.parametrize('bit', ['0', '1'])
